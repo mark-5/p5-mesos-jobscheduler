@@ -7,9 +7,25 @@ with qw(
     Mesos::Framework::JobScheduler::Role::Schedule
 );
 
+=head1 NAME
+
+Mesos::Framework::JobScheduler::Role::Schedule::HandlesTimers
+
+=head1 METHODS
+
+=head2 get_timer($name)
+
+=head2 executions(from => $from_dt, until => $until_dt)
+
+=head2 register_timer($job)
+
+=head2 deregister_timer($name)
+
+=cut
+
 
 has timers => (
-    is => "ro",
+    is      => "ro",
     default => sub { {} },
 );
 
@@ -19,9 +35,14 @@ sub get_timer {
     return $self->timers->{$name};
 }
 
-sub get_timers {
-    my ($self) = @_;
-    return sort {$a->{scheduled_time} <=> $b->{scheduled_time}} values %{$self->timers};
+sub executions {
+    my ($self, %args) = @_;
+    my @jobs = map {$self->get($_)} keys %{$self->timers};
+    my @executions;
+    for my $job (@jobs) {
+        push @executions, map {name => $job->name, scheduled_time => $job->scheduled_time}, $job->executions(%args);
+    }
+    return sort {($a->{scheduled_time} <=> $b->{scheduled_time}) || ($a->{name} cmp $b->{name})} @executions;
 }
 
 sub register_timer {

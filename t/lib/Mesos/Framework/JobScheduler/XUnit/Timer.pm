@@ -5,12 +5,10 @@ use DateTime;
 use Mesos::Framework::JobScheduler::XUnit::Utils qw(ae_sleep);
 use Test::Class::Moose;
 
-with "Mesos::Framework::JobScheduler::XUnit::Role::HasSchedules" => {
+with "Mesos::Framework::JobScheduler::XUnit::Role::HandlesJobScheduling" => {
     schedules => {
         schedule => ["UsesHashStorage", "HandlesTimers"]
     },
-};
-with "Mesos::Framework::JobScheduler::XUnit::Role::HasJobs" => {
     jobs => {
         job => ["HasTimer"],
     },

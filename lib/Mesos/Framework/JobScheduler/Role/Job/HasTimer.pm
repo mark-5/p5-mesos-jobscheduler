@@ -7,6 +7,20 @@ with qw(
     Mesos::Framework::JobScheduler::Role::Job
 );
 
+=head1 NAME
+
+Mesos::Framework::JobScheduler::Role::Job::HasTimer
+
+=head1 ATTRIBUTES
+
+=head2 scheduled_time
+
+=head1 METHODS
+
+=head2 executions()
+
+=cut
+
 has scheduled_time => (
     is       => "rw",
     required => 1,

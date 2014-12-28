@@ -5,6 +5,21 @@ use Type::Utils qw(class_type);
 use Moo::Role;
 with "Mesos::Framework::JobScheduler::Role::Job::HasTimer";
 
+=head1 NAME
+
+Mesos::Framework::JobScheduler::Role::Job::HasCrontab
+
+=head1 ATTRIBUTES
+
+=head2 crontab
+
+=head1 METHODS
+
+=head2 executions(from => $from_dt, until => $until_dt)
+
+=head2 next_time($now)
+
+=cut
 
 sub _build_scheduled_time { shift->next_time }
 

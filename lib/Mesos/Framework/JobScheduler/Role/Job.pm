@@ -14,18 +14,6 @@ Mesos::Framework::JobScheduler::Role::Job
 
 =head2 executor
 
-=head1 METHODS
-
-=head2 on_update($schedule, $old_job)
-
-=head2 on_registered($schedule)
-
-=head2 on_deregistered($schedule)
-
-=head2 on_terminated($task_status, $schedule)
-
-Triggered on all task termination events(finished, failed, killed, lost).
-
 =cut
 
 my @statuses = qw(registered ready disabled deregistered);

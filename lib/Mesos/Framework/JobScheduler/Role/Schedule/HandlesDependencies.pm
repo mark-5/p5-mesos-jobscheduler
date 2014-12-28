@@ -2,6 +2,19 @@ package Mesos::Framework::JobScheduler::Role::Schedule::HandlesDependencies;
 use Moo::Role;
 with "Mesos::Framework::JobScheduler::Role::Schedule";
 
+=head1 NAME
+
+Mesos::Framework::JobScheduler::Role::Schedule::HandlesDependencies
+
+=head1 METHODS
+
+=head2 get_dependents($name)
+
+=head2 register_dependency($job)
+
+=head2 deregister_dependency($name)
+
+=cut
 
 has dependencies => (
     is      => "ro",
