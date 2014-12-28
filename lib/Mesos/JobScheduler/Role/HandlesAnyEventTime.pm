@@ -1,11 +1,11 @@
-package Mesos::Framework::JobScheduler::Role::HandlesAnyEventTime;
+package Mesos::JobScheduler::Role::HandlesAnyEventTime;
 use AnyEvent;
 use DateTime;
 use Moo::Role;
 
 =head1 NAME
 
-Mesos::Framework::JobScheduler::Role::HandlesAnyEventTime
+Mesos::JobScheduler::Role::HandlesAnyEventTime
 
 =head1 METHODS
 

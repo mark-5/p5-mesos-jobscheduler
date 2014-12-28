@@ -1,7 +1,7 @@
-package Mesos::Framework::JobScheduler::XUnit::Schedule;
+package Mesos::JobScheduler::XUnit::Schedule;
 use Test::Class::Moose;
 
-with "Mesos::Framework::JobScheduler::XUnit::Role::HandlesJobScheduling" => {
+with "Mesos::JobScheduler::XUnit::Role::HandlesJobScheduling" => {
     schedules => {
         schedule => ["UsesHashStorage", "HandlesTimers"]
     },

@@ -1,7 +1,7 @@
-package Mesos::Framework::JobScheduler::XUnit::Role::HandlesJobScheduling;
+package Mesos::JobScheduler::XUnit::Role::HandlesJobScheduling;
 use Types::Standard qw(HashRef ArrayRef Str);
 use Time::HiRes qw(time);
-use Mesos::Framework::JobScheduler::XUnit::Utils qw(executor);
+use Mesos::JobScheduler::XUnit::Utils qw(executor);
 use MooseX::Role::Parameterized;
 
 our $COUNT;
@@ -24,13 +24,13 @@ role {
     while (my ($name, $roles) = each %$schedules) {
         has $name => (
             is      => "ro",
-            does    => "Mesos::Framework::JobScheduler::Role::Schedule",
+            does    => "Mesos::JobScheduler::Role::Schedule",
             builder => "_build_$name",
         );
         method "_build_$name" => sub {
             my $class = Moose::Meta::Class->create_anon_class(
                 superclasses => [qw(Moose::Object)],
-                roles        => [map {/::/ ? $_ : "Mesos::Framework::JobScheduler::Role::Schedule::$_"} @$roles],
+                roles        => [map {/::/ ? $_ : "Mesos::JobScheduler::Role::Schedule::$_"} @$roles],
                 cache        => 1,
             );
             $class->make_immutable;
@@ -42,13 +42,13 @@ role {
     while (my ($name, $roles) = each %$jobs) {
         has $name => (
             is      => "ro",
-            does    => "Mesos::Framework::JobScheduler::Role::Job",
+            does    => "Mesos::JobScheduler::Role::Job",
             builder => "_build_$name",
         );
         method "_build_$name" => sub {
             my $class = Moose::Meta::Class->create_anon_class(
                 superclasses => [qw(Moose::Object)],
-                roles        => [map {/::/ ? $_ : "Mesos::Framework::JobScheduler::Role::Job::$_"} @$roles],
+                roles        => [map {/::/ ? $_ : "Mesos::JobScheduler::Role::Job::$_"} @$roles],
                 cache        => 1,
             );
             # caching may return an immutable anon class with defaults already set

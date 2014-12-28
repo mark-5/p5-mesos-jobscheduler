@@ -1,4 +1,4 @@
-package Mesos::Framework::JobScheduler::XUnit::Utils;
+package Mesos::JobScheduler::XUnit::Utils;
 use Mesos::Messages;
 use parent "Exporter";
 

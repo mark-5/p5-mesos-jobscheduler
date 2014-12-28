@@ -1,13 +1,13 @@
-package Mesos::Framework::JobScheduler::Role::Job::HasCrontab;
+package Mesos::JobScheduler::Role::Job::HasCrontab;
 use DateTime::Event::Cron;
 use Types::Standard qw(Str);
 use Type::Utils qw(class_type);
 use Moo::Role;
-with "Mesos::Framework::JobScheduler::Role::Job::HasTimer";
+with "Mesos::JobScheduler::Role::Job::HasTimer";
 
 =head1 NAME
 
-Mesos::Framework::JobScheduler::Role::Job::HasCrontab
+Mesos::JobScheduler::Role::Job::HasCrontab
 
 =head1 ATTRIBUTES
 

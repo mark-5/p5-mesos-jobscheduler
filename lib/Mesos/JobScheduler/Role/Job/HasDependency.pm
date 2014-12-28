@@ -1,11 +1,11 @@
-package Mesos::Framework::JobScheduler::Role::Job::HasDependency;
+package Mesos::JobScheduler::Role::Job::HasDependency;
 use Types::Standard qw(Str);
 use Moo::Role;
-with "Mesos::Framework::JobScheduler::Role::Job";
+with "Mesos::JobScheduler::Role::Job";
 
 =head1 NAME
 
-Mesos::Framework::JobScheduler::Role::Job::HasDependency
+Mesos::JobScheduler::Role::Job::HasDependency
 
 =head1 ATTRIBUTES
 

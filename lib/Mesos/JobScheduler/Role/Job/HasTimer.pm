@@ -1,15 +1,15 @@
-package Mesos::Framework::JobScheduler::Role::Job::HasTimer;
+package Mesos::JobScheduler::Role::Job::HasTimer;
 use Carp;
 use Types::DateTime qw(DateTimeUTC Format);
 use Moo::Role;
 with qw(
-    Mesos::Framework::JobScheduler::Role::HandlesAnyEventTime
-    Mesos::Framework::JobScheduler::Role::Job
+    Mesos::JobScheduler::Role::HandlesAnyEventTime
+    Mesos::JobScheduler::Role::Job
 );
 
 =head1 NAME
 
-Mesos::Framework::JobScheduler::Role::Job::HasTimer
+Mesos::JobScheduler::Role::Job::HasTimer
 
 =head1 ATTRIBUTES
 

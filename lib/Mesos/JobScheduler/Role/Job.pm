@@ -1,10 +1,10 @@
-package Mesos::Framework::JobScheduler::Role::Job;
+package Mesos::JobScheduler::Role::Job;
 use Types::Standard qw(Enum Str);
 use Moo::Role;
 
 =head1 NAME
 
-Mesos::Framework::JobScheduler::Role::Job
+Mesos::JobScheduler::Role::Job
 
 =head1 ATTRIBUTES
 

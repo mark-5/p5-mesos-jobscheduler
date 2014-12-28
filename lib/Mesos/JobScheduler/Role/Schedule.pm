@@ -1,10 +1,10 @@
-package Mesos::Framework::JobScheduler::Role::Schedule;
+package Mesos::JobScheduler::Role::Schedule;
 use Carp;
 use Moo::Role;
 
 =head1 NAME
 
-Mesos::Framework::JobScheduler::Role::Schedule
+Mesos::JobScheduler::Role::Schedule
 
 =head1 METHODS
 

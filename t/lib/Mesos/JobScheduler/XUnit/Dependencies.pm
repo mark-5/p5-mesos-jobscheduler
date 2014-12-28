@@ -1,12 +1,12 @@
-package Mesos::Framework::JobScheduler::XUnit::Dependencies;
+package Mesos::JobScheduler::XUnit::Dependencies;
 use Test::Class::Moose;
 
-with "Mesos::Framework::JobScheduler::XUnit::Role::HandlesJobScheduling" => {
+with "Mesos::JobScheduler::XUnit::Role::HandlesJobScheduling" => {
     schedules => {
         schedule => ["UsesHashStorage", "HandlesDependencies"]
     },
     jobs => {
-        normal_job    => ["Mesos::Framework::JobScheduler::Role::Job"],
+        normal_job    => ["Mesos::JobScheduler::Role::Job"],
         dependent_job => ["HasDependency"],
     },
 };

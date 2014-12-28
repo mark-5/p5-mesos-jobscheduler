@@ -1,7 +1,7 @@
-package Mesos::Framework::JobScheduler::Role::Schedule::UsesHashStorage;
+package Mesos::JobScheduler::Role::Schedule::UsesHashStorage;
 use Carp;
 use Moo::Role;
-with "Mesos::Framework::JobScheduler::Role::Schedule";
+with "Mesos::JobScheduler::Role::Schedule";
 
 has _elements => (
     is      => "ro",
