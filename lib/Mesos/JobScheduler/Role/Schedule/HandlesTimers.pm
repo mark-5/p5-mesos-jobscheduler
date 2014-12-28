@@ -40,7 +40,7 @@ sub executions {
     my @jobs = map {$self->get($_)} keys %{$self->timers};
     my @executions;
     for my $job (@jobs) {
-        push @executions, map {name => $job->name, scheduled_time => $job->scheduled_time}, $job->executions(%args);
+        push @executions, map {name => $job->name, scheduled_time => $job->scheduled_time, job => $job}, $job->executions(%args);
     }
     return sort {($a->{scheduled_time} <=> $b->{scheduled_time}) || ($a->{name} cmp $b->{name})} @executions;
 }

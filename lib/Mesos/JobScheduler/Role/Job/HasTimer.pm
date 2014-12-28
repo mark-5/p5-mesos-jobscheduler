@@ -33,9 +33,13 @@ has scheduled_time => (
 sub _build_scheduled_time { croak "Missing required arguments: scheduled_time" }
 
 sub executions {
-    my ($self, $until, $from) = @_;
+    my ($self, %args) = @_;
+    my ($from, $until) = @args{qw(from until)};
+    $from ||= $self->now;
+
     my $scheduled = $self->scheduled_time;
-    return $scheduled unless $scheduled <= $until and $scheduled >= $from;
+    my $is_between = ($from <= $scheduled and $scheduled <= $until);
+    return $is_between ? $scheduled : ();
 }
 
 1;
