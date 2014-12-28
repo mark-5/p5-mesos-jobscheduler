@@ -1,10 +1,10 @@
-package Mesos::Framework::Role::Schedule::HandlesTimers;
+package Mesos::Framework::JobScheduler::Role::Schedule::HandlesTimers;
 use AnyEvent;
 use DateTime;
 use Moo::Role;
 with qw(
-    Mesos::Framework::Role::HandlesAnyEventTime
-    Mesos::Framework::Role::Schedule
+    Mesos::Framework::JobScheduler::Role::HandlesAnyEventTime
+    Mesos::Framework::JobScheduler::Role::Schedule
 );
 
 
@@ -49,7 +49,7 @@ sub deregister_timer {
 
 after register => sub {
     my ($self, $job) = @_;
-    $self->register_timer($job) if $job->does("Mesos::Framework::Role::Job::HasTimer");
+    $self->register_timer($job) if $job->does("Mesos::Framework::JobScheduler::Role::Job::HasTimer");
 };
 
 after deregister => sub {

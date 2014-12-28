@@ -1,6 +1,6 @@
-package Mesos::Framework::Role::Schedule::HandlesDependencies;
+package Mesos::Framework::JobScheduler::Role::Schedule::HandlesDependencies;
 use Moo::Role;
-with "Mesos::Framework::Role::Schedule";
+with "Mesos::Framework::JobScheduler::Role::Schedule";
 
 
 has dependencies => (
@@ -26,7 +26,7 @@ sub deregister_dependency {
 
 after register => sub {
     my ($self, $job) = @_;
-    $self->register_dependency($job) if $job->does("Mesos::Framework::Role::Job::HasDependency");
+    $self->register_dependency($job) if $job->does("Mesos::Framework::JobScheduler::Role::Job::HasDependency");
 };
 
 after deregister => sub {

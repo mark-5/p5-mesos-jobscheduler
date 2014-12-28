@@ -1,16 +1,16 @@
-package Mesos::Framework::XUnit::Timer;
+package Mesos::Framework::JobScheduler::XUnit::Timer;
 use Try::Tiny;
 use AnyEvent;
 use DateTime;
-use Mesos::Framework::XUnit::Utils qw(ae_sleep);
+use Mesos::Framework::JobScheduler::XUnit::Utils qw(ae_sleep);
 use Test::Class::Moose;
 
-with "Mesos::Framework::XUnit::Role::HasSchedules" => {
+with "Mesos::Framework::JobScheduler::XUnit::Role::HasSchedules" => {
     schedules => {
         schedule => ["UsesHashStorage", "HandlesTimers"]
     },
 };
-with "Mesos::Framework::XUnit::Role::HasJobs" => {
+with "Mesos::Framework::JobScheduler::XUnit::Role::HasJobs" => {
     jobs => {
         job => ["HasTimer"],
     },

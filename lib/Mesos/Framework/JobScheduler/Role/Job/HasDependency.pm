@@ -1,7 +1,7 @@
-package Mesos::Framework::Role::Job::HasDependency;
+package Mesos::Framework::JobScheduler::Role::Job::HasDependency;
 use Types::Standard qw(Str);
 use Moo::Role;
-with "Mesos::Framework::Role::Job";
+with "Mesos::Framework::JobScheduler::Role::Job";
 
 
 has dependency => (

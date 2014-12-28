@@ -1,4 +1,4 @@
-package Mesos::Framework::Role::HandlesAnyEventTime;
+package Mesos::Framework::JobScheduler::Role::HandlesAnyEventTime;
 use AnyEvent;
 use DateTime;
 use Moo::Role;

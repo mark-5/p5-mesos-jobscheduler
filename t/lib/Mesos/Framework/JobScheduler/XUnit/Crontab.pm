@@ -1,16 +1,16 @@
-package Mesos::Framework::XUnit::Crontab;
+package Mesos::Framework::JobScheduler::XUnit::Crontab;
 use Try::Tiny;
 use AnyEvent;
 use DateTime;
-use Mesos::Framework::XUnit::Utils qw(ae_sleep);
+use Mesos::Framework::JobScheduler::XUnit::Utils qw(ae_sleep);
 use Test::Class::Moose;
 
-with "Mesos::Framework::XUnit::Role::HasSchedules" => {
+with "Mesos::Framework::JobScheduler::XUnit::Role::HasSchedules" => {
     schedules => {
         schedule => ["UsesHashStorage", "HandlesTimers"]
     },
 };
-with "Mesos::Framework::XUnit::Role::HasJobs" => {
+with "Mesos::Framework::JobScheduler::XUnit::Role::HasJobs" => {
     jobs => {
         job => ["HasCrontab"],
     },

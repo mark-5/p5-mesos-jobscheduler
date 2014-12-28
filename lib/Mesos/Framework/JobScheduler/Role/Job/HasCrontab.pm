@@ -1,9 +1,9 @@
-package Mesos::Framework::Role::Job::HasCrontab;
+package Mesos::Framework::JobScheduler::Role::Job::HasCrontab;
 use DateTime::Event::Cron;
 use Types::Standard qw(Str);
 use Type::Utils qw(class_type);
 use Moo::Role;
-with "Mesos::Framework::Role::Job::HasTimer";
+with "Mesos::Framework::JobScheduler::Role::Job::HasTimer";
 
 
 sub _build_scheduled_time { shift->next_time }

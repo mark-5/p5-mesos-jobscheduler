@@ -1,10 +1,10 @@
-package Mesos::Framework::Role::Job::HasTimer;
+package Mesos::Framework::JobScheduler::Role::Job::HasTimer;
 use Carp;
 use Types::DateTime qw(DateTimeUTC Format);
 use Moo::Role;
 with qw(
-    Mesos::Framework::Role::HandlesAnyEventTime
-    Mesos::Framework::Role::Job
+    Mesos::Framework::JobScheduler::Role::HandlesAnyEventTime
+    Mesos::Framework::JobScheduler::Role::Job
 );
 
 has scheduled_time => (
