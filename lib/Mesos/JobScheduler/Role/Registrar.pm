@@ -2,6 +2,7 @@ package Mesos::JobScheduler::Role::Registrar;
 use Mesos::JobScheduler::Utils qw(now);
 use Moo::Role;
 use namespace::autoclean;
+with 'Mesos::JobScheduler::Role::Interface::Registrar';
 
 has _registry => (
     is      => 'ro',

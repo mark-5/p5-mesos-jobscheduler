@@ -18,5 +18,6 @@ on develop => sub {
 
 on test => sub {
     requires 'Module::Runtime';
+    requires 'Sub::Override';
     requires 'Test::Class::Moose', '0.55';
 };

@@ -3,6 +3,11 @@ use Mesos::JobScheduler::Utils qw(now);
 use Scalar::Util qw(weaken);
 use Moo::Role;
 use namespace::autoclean;
+with qw(
+    Mesos::JobScheduler::Role::Interface::EventLoop
+    Mesos::JobScheduler::Role::Interface::Registrar
+    Mesos::JobScheduler::Role::Interface::Executioner
+);
 
 has _cron_jobs => (
     is      => 'ro',

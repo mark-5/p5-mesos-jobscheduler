@@ -3,7 +3,7 @@ use strict;
 use warnings;
 use DateTime;
 use base 'Exporter::Tiny';
-our @EXPORT = qw(now);
+our @EXPORT_OK = qw(now);
 
 sub now {
     my (%args) = @_;

@@ -2,26 +2,23 @@ package Mesos::JobScheduler::XUnit::Utils;
 use strict;
 use warnings;
 use DateTime;
+use Sub::Override;
 use Symbol qw(qualify_to_ref);
 use base 'Exporter::Tiny';
-our @EXPORT = qw(fake_the_date unfake_the_date);
+our @EXPORT_OK = qw(fake_the_date unfake_the_date);
 
-our %_original_datetime_methods = (
-    now => *{qualify_to_ref('now', 'DateTime')}{CODE},
-);
+our %_overrides;
 
 sub fake_the_date {
-    no warnings 'redefine';
     my (%args) = @_;
     if (my $now = $args{now}) {
-        *{qualify_to_ref('now', 'DateTime')} = sub { $now };
+        my $override = $_overrides{'DateTime'} //= Sub::Override->new;
+        $override->replace('DateTime::now', sub { $now });
     }
 }
 
 sub unfake_the_date {
-    while (my ($name, $code) = each %_original_datetime_methods) {
-        *{qualify_to_ref($name, 'DateTime')} = $code;
-    }
+    delete $_overrides{'DateTime'};
 }
 
 1;

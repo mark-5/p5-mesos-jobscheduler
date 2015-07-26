@@ -15,10 +15,10 @@ sub new_manager {
     my $metaclass = Moose::Meta::Class->create_anon_class(
         superclasses => [qw(Moose::Object)],
         roles        => [qw(
+            Mesos::JobScheduler::Role::Executioner
             Mesos::JobScheduler::Role::HasEventLoop
-            Mesos::JobScheduler::Role::Registrar
-            Mesos::JobScheduler::Role::Registrar::WithExecutions
             Mesos::JobScheduler::Role::Manager::Cron
+            Mesos::JobScheduler::Role::Registrar
         )],
         cache => 1,
     );
