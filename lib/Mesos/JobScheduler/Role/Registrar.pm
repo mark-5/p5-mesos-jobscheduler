@@ -1,5 +1,5 @@
-package Mesos::JobScheduler::Role::HandlesRegistration;
-use Time::HiRes qw();
+package Mesos::JobScheduler::Role::Registrar;
+use Mesos::JobScheduler::Utils qw(now);
 use Moo::Role;
 use namespace::autoclean;
 
@@ -11,10 +11,9 @@ has _registry => (
 
 sub add_job {
     my ($self, $job) = @_;
-    my $now = Time::HiRes::time;
     $self->_registry->{$job->id} = {
-        job  => $job,
-        time => $now,
+        added => now(),
+        job   => $job,
     };
 }
 
@@ -31,8 +30,9 @@ sub remove_job {
 
 sub update_job {
     my ($self, $id, %args) = @_;
-    my $old = $self->_registry->{$id}{job};
-    return $self->_registry->{$id}{job} = $old->update(%args);
+    my $old = $self->_registry->{$id};
+    $old->{updated} = now();
+    return $old->{job} = $old->{job}->update(%args);
 }
 
 1;

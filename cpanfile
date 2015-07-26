@@ -1,10 +1,12 @@
 requires 'namespace::autoclean', '0.16';
+requires 'AnyEvent::Future';
+requires 'DateTime::Event::Cron';
+requires 'Exporter::Tiny';
 requires 'Hash::Ordered';
 requires 'Mesos';
 requires 'Moo', '0.091008';
 requires 'MooX::Rebuild';
 requires 'Types::UUID';
-requires 'UUID::Tiny';
 
 on develop => sub {
     requires 'Dist::Zilla::Plugin::ExtraTests';
@@ -15,5 +17,6 @@ on develop => sub {
 };
 
 on test => sub {
+    requires 'Module::Runtime';
     requires 'Test::Class::Moose', '0.55';
 };
