@@ -1,20 +1,6 @@
 package Mesos::JobScheduler;
-use Moo::Role;
+use Moo;
 
-# ABSTRACT: A job scheduling role for Mesos frameworks
-
-=head1 NAME
-
-Mesos::JobScheduler - A job scheduling role for Mesos frameworks
-
-=cut
-
-has schedule => (
-    is      => "ro",
-    isa     => "Mesos::JobScheduler::Role::Schedule",
-    builder => 1,
-);
-sub _build_schedule { Mesos::JobScheduler::Schedule->new }
-
+# ABSTRACT: a base class for Mesos job scheduling frameworks
 
 1;
