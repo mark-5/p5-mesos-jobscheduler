@@ -32,7 +32,7 @@ sub _remove_cron_job {
 sub _is_cron_job {
     my ($self, $id_or_job) = @_;
     my $job = ref $id_or_job ? $id_or_job : $self->get_job($id_or_job);
-    return $job->isa('Mesos::JobScheduler::Job::Cron');
+    return $job && $job->isa('Mesos::JobScheduler::Job::Cron');
 }
 
 

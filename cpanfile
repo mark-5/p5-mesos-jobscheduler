@@ -3,6 +3,7 @@ requires 'AnyEvent::Future';
 requires 'DateTime::Event::Cron';
 requires 'Exporter::Tiny';
 requires 'Hash::Ordered';
+requires 'List::MoreUtils';
 requires 'Mesos';
 requires 'Moo', '0.091008';
 requires 'MooX::Rebuild';

@@ -44,13 +44,13 @@ sub test_queueing_one_off {
 
 sub test_execution_cleanup {
     my ($test) = @_;
-    my $job     = $test->new_job('OneOff')
+    my $job     = $test->new_job('OneOff');
     my $manager = $test->new_manager('OneOff');
     $manager->add_job($job);
 
-    my ($execution) = $self->queued;
-    $manager->finish_execution($queued->{id});
-    is $manager->get_job($queued->{job}->id), undef, 'job is removed after execution';
+    my ($execution) = $manager->queued;
+    $manager->finish_execution($execution->{id});
+    is $manager->get_job($execution->{job}->id), undef, 'job is removed after execution';
 }
 
 sub test_update_one_off {
