@@ -45,7 +45,7 @@ sub _remove_execution {
     my ($self, $id) = @_;
     my $execution  = $self->_executions->delete($id);
     if (my $status = $execution->{status}) {
-        $self->_execution_statuses->{$status}->delete($id);
+        return $self->_execution_statuses->{$status}->delete($id);
     }
 }
 

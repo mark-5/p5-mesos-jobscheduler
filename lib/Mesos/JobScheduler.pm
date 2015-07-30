@@ -7,6 +7,7 @@ with qw(
     Mesos::JobScheduler::Role::HasEventLoop
     Mesos::JobScheduler::Role::HasTimers
     Mesos::JobScheduler::Role::Manager::Cron
+    Mesos::JobScheduler::Role::Manager::OneOff
     Mesos::JobScheduler::Role::Registrar
     Mesos::JobScheduler::Role::TaskScheduler
 );
