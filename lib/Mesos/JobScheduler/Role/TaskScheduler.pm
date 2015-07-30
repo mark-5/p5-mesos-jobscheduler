@@ -8,6 +8,8 @@ with qw(
     Mesos::JobScheduler::Role::Interface::Executioner
 );
 
+# ABSTRACT: a role for scheduling Mesos tasks
+
 has _tasks => (
     is      => 'ro',
     default => sub { {} },

@@ -6,6 +6,24 @@ use Moo::Role;
 use namespace::autoclean;
 with 'Mesos::JobScheduler::Role::Interface::Executioner';
 
+# ABSTRACT: a role for managing job executions
+
+=head1 METHODS
+
+=head2 get_execution
+
+=head2 fail_execution
+
+=head2 finish_execution
+
+=head2 queue_execution
+
+=head2 queued
+
+=head2 start_execution
+
+=cut
+
 has _executions => (
     is      => 'ro',
     default => sub { Hash::Ordered->new },

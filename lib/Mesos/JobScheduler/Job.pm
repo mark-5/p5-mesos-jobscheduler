@@ -8,6 +8,22 @@ with qw(
     Mesos::JobScheduler::Role::HasId
 );
 
+# ABSTRACT: a base class for Mesos::JobScheduler jobs
+
+=head1 ATTRIBUTES
+
+=head2 command
+
+=head2 name
+
+=head2 resources
+
+=head1 METHODS
+
+=head2 update
+
+=cut
+
 has command => (
     is       => 'ro',
     required => 1,

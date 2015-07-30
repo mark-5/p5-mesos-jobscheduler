@@ -5,6 +5,18 @@ use Moo;
 use namespace::autoclean;
 extends 'Mesos::JobScheduler::Job';
 
+=head1 ATTRIBUTES
+
+=head2 crontab
+
+=head2 scheduled
+
+=head1 METHODS
+
+=head2 next
+
+=cut
+
 has crontab => (
     is       => 'ro',
     required => 1,
