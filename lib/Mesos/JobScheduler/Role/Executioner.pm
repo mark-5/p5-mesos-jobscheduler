@@ -49,6 +49,11 @@ sub _remove_execution {
     }
 }
 
+sub get_execution {
+    my ($self, $id) = @_;
+    return $self->_executions->get($id);
+}
+
 sub queue_execution {
     my ($self, $job) = @_;
     return $self->_add_execution($job, 'queued');
