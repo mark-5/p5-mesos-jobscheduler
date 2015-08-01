@@ -41,13 +41,8 @@ sub new_scheduler {
     my ($test, %methods) = @_;
     my $metaclass = Moose::Meta::Class->create_anon_class(
         superclasses => [qw(Mesos::Scheduler)],
-        attributes   => [],
-        roles => [qw(
-            Mesos::JobScheduler::Role::Executioner
-            Mesos::JobScheduler::Role::HasLogger
-            Mesos::JobScheduler::Role::TaskScheduler
-        )],
-        methods => \%methods,
+        roles        => [qw(Mesos::JobScheduler::Role::Core)],
+        methods      => \%methods,
     );
     return $metaclass->new_object;
 }

@@ -5,13 +5,7 @@ use namespace::autoclean;
 
 sub new_manager {
     my ($test, @roles) = @_;
-    my @defaults  = qw(
-        Mesos::JobScheduler::Role::Executioner
-        Mesos::JobScheduler::Role::HasEventLoop
-        Mesos::JobScheduler::Role::HasLogger
-        Mesos::JobScheduler::Role::HasTimers
-        Mesos::JobScheduler::Role::Registrar
-    );
+    my @defaults = qw(Mesos::JobScheduler::Role::Core);
 
     my $metaclass = Moose::Meta::Class->create_anon_class(
         superclasses => [qw(Moose::Object)],
