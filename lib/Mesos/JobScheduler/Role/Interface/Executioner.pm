@@ -5,6 +5,8 @@ with 'Mesos::JobScheduler::Role::Interface';
 
 =head1 METHODS
 
+=head2 get_execution
+
 =head2 fail_execution
 
 =head2 finish_execution
@@ -18,8 +20,10 @@ with 'Mesos::JobScheduler::Role::Interface';
 =cut
 
 requires qw(
+    executions
     queued
 
+    get_execution
     queue_execution
     fail_execution
     finish_execution

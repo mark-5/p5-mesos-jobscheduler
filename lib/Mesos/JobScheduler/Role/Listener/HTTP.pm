@@ -2,6 +2,7 @@ package Mesos::JobScheduler::Role::Listener::HTTP;
 use JSON qw(decode_json);
 use Mesos::JobScheduler::Utils qw(psgi_json);
 use Module::Runtime qw(require_module);
+use Plack::Request;
 use Router::Simple;
 use Scalar::Util qw(weaken);
 use Twiggy::Server;
@@ -45,7 +46,8 @@ sub _build_psgi_app {
         );
         if (my $match  = $router->match($env)) {
             my $action = $match->{action};
-            $self->$action($env, $match);
+            my $req    = Plack::Request->new($env);
+            $self->$action($req, $match);
         } else {
             [404, [], ['not found']];
         }
@@ -100,9 +102,9 @@ has _psgi_server => (
 );
 
 sub _psgi_decode_body {
-    my ($self, $env) = @_;
+    my ($self, $req) = @_;
     my $raw = '';
-    while (my $bytes = $env->{'psgi.input'}->read(my($buf), 2048)) {
+    while (my $bytes = $req->body->read(my($buf), 2048)) {
         $raw .= $buf;
     }
     return decode_json($raw);
@@ -116,33 +118,54 @@ sub _json_to_job {
     return $class->new(%$json);
 }
 
+sub _psgi_get_executions {
+    my ($self, $req) = @_;
+    my $query = $req->query_parameters;
+    return psgi_json([$self->executions], {pretty => $query->{pretty}});
+}
+
+sub _psgi_get_jobs {
+    my ($self, $req) = @_;
+    my $query = $req->query_parameters;
+    return psgi_json([$self->jobs], {pretty => $query->{pretty}});
+}
+
 sub _psgi_get_job {
-    my ($self, $env, $match) = @_;
-    my $job = $self->get_job($match->{id});
-    return $job ? psgi_json($job) : psgi_json({}, 404);
+    my ($self, $req, $match) = @_;
+    my $query = $req->query_parameters;
+    my $job   = $self->get_job($match->{id});
+
+    if ($job) {
+        return psgi_json($job, {pretty => $query->{pretty}});
+    } else {
+        return psgi_json({}, {pretty => $query->{pretty}, status => 404});
+    }
 }
 
 sub _psgi_add_job {
-    my ($self, $env, $match) = @_;
-    my $json = $self->_psgi_decode_body($env);
-    my $job  = $self->_json_to_job($json);
+    my ($self, $req, $match) = @_;
+    my $query = $req->query_parameters;
+    my $json  = $self->_psgi_decode_body($req);
+    my $job   = $self->_json_to_job($json);
 
     $self->add_job($job);
-    return psgi_json($job);
+    return psgi_json($job, {pretty => $query->{pretty}});
 }
 
 sub _psgi_update_job {
-    my ($self, $env, $match) = @_;
-    my $json = $self->_psgi_decode_body($env);
+    my ($self, $req, $match) = @_;
+    my $query = $req->query_parameters;
+    my $json  = $self->_psgi_decode_body($req);
 
     my $job  = $self->update_job($match->{id}, %$json);
-    return psgi_json($job);
+    return psgi_json($job, {pretty => $query->{pretty}});
 }
 
 sub _psgi_remove_job {
-    my ($self, $env, $match) = @_;
-    my $old = $self->remove_job($match->{id});
-    return psgi_json($old);
+    my ($self, $req, $match) = @_;
+    my $query = $req->query_parameters;
+    my $old   = $self->remove_job($match->{id});
+    return psgi_json($old, {pretty => $query->{pretty}});
 }
 
 

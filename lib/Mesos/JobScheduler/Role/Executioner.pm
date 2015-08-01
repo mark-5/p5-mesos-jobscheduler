@@ -13,11 +13,13 @@ with qw(
 
 =head1 METHODS
 
-=head2 get_execution
+=head2 executions
 
 =head2 fail_execution
 
 =head2 finish_execution
+
+=head2 get_execution
 
 =head2 queue_execution
 
@@ -101,6 +103,11 @@ sub fail_execution {
     my $execution = $self->_remove_execution($id);
     $self->log_info('started execution for job ' . $execution->{job}->id);
     return $execution;
+}
+
+sub executions {
+    my ($self) = @_;
+    return $self->_executions->values;
 }
 
 sub queued {

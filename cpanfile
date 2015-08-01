@@ -10,6 +10,7 @@ requires 'List::MoreUtils';
 requires 'Mesos';
 requires 'Moo', '0.091008';
 requires 'MooX::Rebuild';
+requires 'Plack::Request';
 requires 'Router::Simple';
 requires 'Twiggy::Server';
 requires 'Types::DateTime';
