@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Role::Executioner;
+
 use Hash::Ordered;
 use Mesos::JobScheduler::Utils qw(now);
 use Types::UUID qw(Uuid);

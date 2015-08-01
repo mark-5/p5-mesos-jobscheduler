@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Job;
+
 use Types::Standard qw(Dict Num Optional);
 use Types::UUID qw(Uuid);
 use Moo;

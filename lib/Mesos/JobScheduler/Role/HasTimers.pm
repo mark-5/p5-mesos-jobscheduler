@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Role::HasTimers;
+
 use Mesos::JobScheduler::Utils qw(now);
 use Scalar::Util qw(weaken);
 use Moo::Role;

@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Role::HasEventLoop;
+
 use AnyEvent::Future;
 use Moo::Role;
 use namespace::autoclean;

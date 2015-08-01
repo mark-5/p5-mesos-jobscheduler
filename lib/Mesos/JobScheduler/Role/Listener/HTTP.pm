@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Role::Listener::HTTP;
+
 use JSON qw(decode_json);
 use Mesos::JobScheduler::Utils qw(psgi_json);
 use Module::Runtime qw(require_module);

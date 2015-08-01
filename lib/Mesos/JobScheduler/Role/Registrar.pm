@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Role::Registrar;
+
 use Hash::Ordered;
 use Mesos::JobScheduler::Utils qw(now);
 use Moo::Role;

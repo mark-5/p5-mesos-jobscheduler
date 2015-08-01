@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Role::TaskScheduler;
+
 use List::MoreUtils qw(any);
 use Mesos::JobScheduler::Utils qw(now);
 use Mesos::Messages;

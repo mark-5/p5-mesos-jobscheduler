@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Utils;
+
 use strict;
 use warnings;
 use DateTime;

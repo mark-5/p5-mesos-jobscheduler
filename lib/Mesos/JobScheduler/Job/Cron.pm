@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Job::Cron;
+
 use DateTime::Event::Cron;
 use DateTime::Format::RFC3339;
 use Mesos::JobScheduler::Utils qw(now);

@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Role::Listener;
+
 use Moo::Role;
 use namespace::autoclean;
 

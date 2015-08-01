@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Role::Manager::Cron;
+
 use Mesos::JobScheduler::Utils qw(now);
 use Scalar::Util qw(weaken);
 use Moo::Role;

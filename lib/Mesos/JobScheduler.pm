@@ -1,4 +1,5 @@
 package Mesos::JobScheduler;
+
 use Moo;
 use namespace::autoclean;
 extends 'Mesos::Scheduler';

@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Job::OneOff;
+
 use DateTime::Format::RFC3339;
 use Types::DateTime qw(DateTimeUTC Format);
 use Moo;

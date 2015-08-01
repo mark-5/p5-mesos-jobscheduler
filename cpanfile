@@ -18,6 +18,8 @@ requires 'Types::UUID';
 
 on develop => sub {
     requires 'Dist::Zilla::Plugin::ExtraTests';
+    requires 'Dist::Zilla::Plugin::PkgVersion';
+    requires 'Dist::Zilla::Plugin::PodWeaver';
     requires 'Dist::Zilla::Plugin::Prereqs::FromCPANfile';
     requires 'Dist::Zilla::Plugin::ReadmeFromPod';
     requires 'Dist::Zilla::PluginBundle::Basic';
@@ -28,4 +30,6 @@ on test => sub {
     requires 'Module::Runtime';
     requires 'Sub::Override';
     requires 'Test::Class::Moose', '0.55';
+    requires 'Test::Pod';
+    requires 'Test::Strict';
 };

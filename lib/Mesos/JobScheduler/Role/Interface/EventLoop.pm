@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Role::Interface::EventLoop;
+
 use Moo::Role;
 with 'Mesos::JobScheduler::Role::Interface';
 

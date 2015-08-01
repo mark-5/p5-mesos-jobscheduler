@@ -1,4 +1,5 @@
 package Mesos::JobScheduler::Role::Interface::Logger;
+
 use Moo::Role;
 use namespace::autoclean;
 
