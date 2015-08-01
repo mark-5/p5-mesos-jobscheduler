@@ -1,0 +1,24 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use AE;
+use Getopt::Long::Descriptive;
+use Mesos::JobScheduler;
+
+my ($opt, $usage) = describe_options(
+    "$0 %o",
+    ['listen|l=s', 'the address to listen to http requests on'],
+);
+my ($host, $port) = split ':', $opt->{listen} // '';
+$host ||= '0.0.0.0';
+$port ||= 8080;
+
+my $scheduler = Mesos::JobScheduler->new(
+    http => {
+        host => $host || '0.0.0.0',
+        port => $port || 8080,
+    },
+);
+
+$SIG{INT} = sub { exit 0 };
+AE::cv->recv;

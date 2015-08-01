@@ -57,4 +57,13 @@ sub BUILD {
     $self->_set_resources({%defaults, %{$self->resources}});
 }
 
+sub TO_JSON {
+    my ($self) = @_;
+    my $object = {map {
+        ($_, $self->$_)
+    } qw(command id name resources)};
+    ($object->{type} = ref $self) =~ s/^Mesos::JobScheduler::Job:://;
+    return $object;
+}
+
 1;

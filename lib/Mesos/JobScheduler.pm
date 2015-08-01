@@ -6,6 +6,7 @@ with qw(
     Mesos::JobScheduler::Role::Executioner
     Mesos::JobScheduler::Role::HasEventLoop
     Mesos::JobScheduler::Role::HasTimers
+    Mesos::JobScheduler::Role::Listener::HTTP
     Mesos::JobScheduler::Role::Manager::Cron
     Mesos::JobScheduler::Role::Manager::Dependency
     Mesos::JobScheduler::Role::Manager::OneOff

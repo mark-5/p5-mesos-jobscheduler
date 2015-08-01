@@ -14,4 +14,11 @@ has parent => (
     required => 1,
 );
 
+around TO_JSON => sub {
+    my ($orig, $self) = @_;
+    my $object = $self->$orig;
+    $object->{parent} = $self->parent;
+    return $object;
+};
+
 1;

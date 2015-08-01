@@ -1,12 +1,18 @@
 requires 'namespace::autoclean', '0.16';
 requires 'AnyEvent::Future';
 requires 'DateTime::Event::Cron';
+requires 'DateTime::Format::RFC3339';
 requires 'Exporter::Tiny';
+requires 'Getopt::Long::Descriptive';
 requires 'Hash::Ordered';
+requires 'JSON';
 requires 'List::MoreUtils';
 requires 'Mesos';
 requires 'Moo', '0.091008';
 requires 'MooX::Rebuild';
+requires 'Router::Simple';
+requires 'Twiggy::Server';
+requires 'Types::DateTime';
 requires 'Types::UUID';
 
 on develop => sub {
