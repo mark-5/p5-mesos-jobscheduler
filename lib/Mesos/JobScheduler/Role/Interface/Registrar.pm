@@ -1,5 +1,6 @@
 package Mesos::JobScheduler::Role::Interface::Registrar;
 use Moo::Role;
+with 'Mesos::JobScheduler::Role::Interface';
 
 =head1 METHODS
 

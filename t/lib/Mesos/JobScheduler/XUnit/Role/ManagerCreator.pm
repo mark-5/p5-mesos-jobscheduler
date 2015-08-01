@@ -8,6 +8,7 @@ sub new_manager {
     my @defaults  = qw(
         Mesos::JobScheduler::Role::Executioner
         Mesos::JobScheduler::Role::HasEventLoop
+        Mesos::JobScheduler::Role::HasLogger
         Mesos::JobScheduler::Role::HasTimers
         Mesos::JobScheduler::Role::Registrar
     );

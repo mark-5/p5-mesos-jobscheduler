@@ -1,6 +1,7 @@
 package Mesos::JobScheduler::Role::Interface::Timer;
 use Moo::Role;
 use namespace::autoclean;
+with 'Mesos::JobScheduler::Role::Interface';
 
 =head1 METHODS
 

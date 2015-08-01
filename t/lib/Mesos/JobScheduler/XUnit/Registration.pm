@@ -9,7 +9,10 @@ sub new_registry {
     my ($test, @args) = @_;
     my $metaclass = Moose::Meta::Class->create_anon_class(
         superclasses => [qw(Moose::Object)],
-        roles        => [qw(Mesos::JobScheduler::Role::Registrar)],
+        roles        => [qw(
+            Mesos::JobScheduler::Role::HasLogger
+            Mesos::JobScheduler::Role::Registrar
+        )],
         cache        => 1,
     );
     return $metaclass->new_object(@args);

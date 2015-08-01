@@ -6,6 +6,7 @@ with qw(
     Mesos::JobScheduler::Role::Interface::Executioner
     Mesos::JobScheduler::Role::Interface::Registrar
     Mesos::JobScheduler::Role::Interface::Timer
+    Mesos::JobScheduler::Role::Manager
 );
 
 sub _add_one_off_job {

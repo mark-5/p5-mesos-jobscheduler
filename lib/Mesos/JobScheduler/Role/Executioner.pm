@@ -4,7 +4,10 @@ use Mesos::JobScheduler::Utils qw(now);
 use Types::UUID qw(Uuid);
 use Moo::Role;
 use namespace::autoclean;
-with 'Mesos::JobScheduler::Role::Interface::Executioner';
+with qw(
+    Mesos::JobScheduler::Role::Interface::Executioner
+    Mesos::JobScheduler::Role::Interface::Logger
+);
 
 # ABSTRACT: a role for managing job executions
 
@@ -57,6 +60,7 @@ sub _update_execution_status {
 
     my $ids = $self->_execution_statuses->{$status} //= Hash::Ordered->new;
     $ids->push($id, $execution);
+    return $execution;
 }
 
 sub _remove_execution {
@@ -74,22 +78,29 @@ sub get_execution {
 
 sub queue_execution {
     my ($self, $job) = @_;
+    $self->log_info('queued execution for job ' . $job->id);
     return $self->_add_execution($job, 'queued');
 }
 
 sub start_execution {
     my ($self, $id) = @_;
-    $self->_update_execution_status($id, 'running');
+    my $execution = $self->_update_execution_status($id, 'running');
+    $self->log_info('started execution for job ' . $execution->{job}->id);
+    return $execution;
 }
 
 sub finish_execution {
     my ($self, $id) = @_;
-    $self->_remove_execution($id);
+    my $execution = $self->_remove_execution($id);
+    $self->log_info('started execution for job ' . $execution->{job}->id);
+    return $execution;
 }
 
 sub fail_execution {
     my ($self, $id) = @_;
-    $self->_remove_execution($id);
+    my $execution = $self->_remove_execution($id);
+    $self->log_info('started execution for job ' . $execution->{job}->id);
+    return $execution;
 }
 
 sub queued {

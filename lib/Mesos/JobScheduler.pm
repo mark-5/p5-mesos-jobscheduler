@@ -5,6 +5,7 @@ extends 'Mesos::Scheduler';
 with qw(
     Mesos::JobScheduler::Role::Executioner
     Mesos::JobScheduler::Role::HasEventLoop
+    Mesos::JobScheduler::Role::HasLogger::STDERR
     Mesos::JobScheduler::Role::HasTimers
     Mesos::JobScheduler::Role::Listener::HTTP
     Mesos::JobScheduler::Role::Manager::Cron

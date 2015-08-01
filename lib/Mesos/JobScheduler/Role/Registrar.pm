@@ -2,7 +2,10 @@ package Mesos::JobScheduler::Role::Registrar;
 use Mesos::JobScheduler::Utils qw(now);
 use Moo::Role;
 use namespace::autoclean;
-with 'Mesos::JobScheduler::Role::Interface::Registrar';
+with qw(
+    Mesos::JobScheduler::Role::Interface::Logger
+    Mesos::JobScheduler::Role::Interface::Registrar
+);
 
 # ABSTRACT: a role for registering jobs
 
@@ -30,6 +33,7 @@ sub add_job {
         added => now(),
         job   => $job,
     };
+    $self->log_info("added job " . $job->id);
 }
 
 sub get_job {
@@ -40,6 +44,7 @@ sub get_job {
 sub remove_job {
     my ($self, $id) = @_;
     my $old = delete $self->_registry->{$id};
+    $self->log_info("removed job " . $old->{job}->id);
     return $old->{job};
 }
 
@@ -47,7 +52,10 @@ sub update_job {
     my ($self, $id, %args) = @_;
     my $old = $self->_registry->{$id};
     $old->{updated} = now();
-    return $old->{job} = $old->{job}->update(%args);
+    my $job = $old->{job} = $old->{job}->update(%args);
+
+    $self->log_info("updated job " . $job->id);
+    return $job;
 }
 
 1;

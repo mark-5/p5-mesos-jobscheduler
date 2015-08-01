@@ -8,6 +8,7 @@ with qw(
     Mesos::JobScheduler::Role::Interface::Registrar
     Mesos::JobScheduler::Role::Interface::Executioner
     Mesos::JobScheduler::Role::Interface::Timer
+    Mesos::JobScheduler::Role::Manager
 );
 
 sub test_setup { unfake_the_date() }

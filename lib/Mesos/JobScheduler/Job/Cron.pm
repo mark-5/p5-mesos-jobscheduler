@@ -56,7 +56,7 @@ sub next {
 around TO_JSON => sub {
     my ($orig, $self) = @_;
     my $object = $self->$orig;
-    $object->{crontab} = $self->$crontab.'';
+    $object->{crontab} = $self->crontab.'';
     $object->{scheduled} = DateTime::Format::RFC3339->format_datetime($self->scheduled);
     return $object;
 };

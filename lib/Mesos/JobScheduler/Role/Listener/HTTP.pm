@@ -8,7 +8,10 @@ use Twiggy::Server;
 use Types::Standard qw(Dict Str Int);
 use Moo::Role;
 use namespace::autoclean;
-with 'Mesos::JobScheduler::Role::Listener';
+with qw(
+    Mesos::JobScheduler::Role::Interface::Logger
+    Mesos::JobScheduler::Role::Listener
+);
 
 has http => (
     is       => 'ro',
@@ -29,6 +32,17 @@ sub _build_psgi_app {
     my $router = $self->_psgi_router;
     return sub {
         my ($env) = @_;
+        $self->log_info(
+            join '',
+            $env->{REQUEST_METHOD},
+            ' ',
+            $env->{'psgi.url_scheme'}.'://',
+            $env->{'HTTP_HOST'},
+            $env->{'SCRIPT_NAME'},
+            $env->{'PATH_INFO'},
+            ' ',
+            $env->{SERVER_PROTOCOL},
+        );
         if (my $match  = $router->match($env)) {
             my $action = $match->{action};
             $self->$action($env, $match);
@@ -135,6 +149,10 @@ sub _psgi_remove_job {
 after start_listener => sub {
     my ($self) = @_;
     my $http   = $self->http;
+    $self->log_info(
+        "starting http listener on http://$http->{host}:$http->{port}"
+    );
+
     my $server = Twiggy::Server->new(%$http);
     $server->register_service($self->_psgi_app);
     $self->_set_psgi_server($server);
@@ -142,6 +160,7 @@ after start_listener => sub {
 
 after stop_listener => sub {
     my ($self) = @_;
+    $self->log_info('stopping http listener');
     $self->_clear_psgi_server;
 };
 

@@ -5,6 +5,7 @@ use namespace::autoclean;
 with qw(
     Mesos::JobScheduler::Role::Interface::Executioner
     Mesos::JobScheduler::Role::Interface::Registrar
+    Mesos::JobScheduler::Role::Manager
 );
 
 has _job_dependencies => (

@@ -44,6 +44,7 @@ sub new_scheduler {
         attributes   => [],
         roles => [qw(
             Mesos::JobScheduler::Role::Executioner
+            Mesos::JobScheduler::Role::HasLogger
             Mesos::JobScheduler::Role::TaskScheduler
         )],
         methods => \%methods,
