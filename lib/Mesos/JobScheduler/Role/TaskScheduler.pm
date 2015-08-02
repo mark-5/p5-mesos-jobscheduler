@@ -25,18 +25,22 @@ sub resourceOffers {
         my $offer = $self->_claim_offer_for_job($job, $offers) or next;
         my $task  = $self->_job_to_task($job, $offer);
 
-        push @{$tasks{$offer->{id}}||=[]}, $task;
+        push @{$tasks{$offer->{id}{value}}||=[]}, $task;
         $self->_tasks->{$task->{task_id}{value}} = {
             execution_id => $execution->{id},
             launched     => now(),
             task         => $task,
         };
+        $self->start_execution($execution->{id});
     }
 
     for my $offer (@$offers) {
         my $offer_id = $offer->{id};
-        my $tasks    = $tasks{$offer_id} or next;
-        $driver->launchTasks($offer_id, $tasks);
+        if (my $tasks = $tasks{$offer_id->{value}}) {
+            $driver->launchTasks([$offer_id], $tasks);
+        } else {
+            $driver->declineOffer($offer_id);
+        }
     }
 }
 
@@ -67,7 +71,7 @@ sub _job_to_mesos_resources {
         my $type = $_;
         Mesos::Resource->new({
             name   => $type,
-            type   => Mesos::Value::Type::SCALAR
+            type   => Mesos::Value::Type::SCALAR,
             scalar => {value => $resources->{$type}},
         });
     } sort keys %$resources;
@@ -79,7 +83,7 @@ sub _job_to_task {
         command   => {value => $job->command},
         name      => $job->name,
         resources => [$self->_job_to_mesos_resources($job)],
-        slave_id  => $offer->{slave_id}{value},
+        slave_id  => $offer->{slave_id},
         task_id   => {value => $job->name},
     });
 }

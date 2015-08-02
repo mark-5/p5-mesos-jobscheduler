@@ -6,6 +6,7 @@ use Module::Runtime qw(require_module);
 use Plack::Request;
 use Router::Simple;
 use Scalar::Util qw(weaken);
+use Try::Tiny;
 use Twiggy::Server;
 use Types::Standard qw(Dict Str Int);
 use Moo::Role;
@@ -48,7 +49,11 @@ sub _build_psgi_app {
         if (my $match  = $router->match($env)) {
             my $action = $match->{action};
             my $req    = Plack::Request->new($env);
-            $self->$action($req, $match);
+            try {
+                $self->$action($req, $match);
+            } catch {
+                [500, [], ['internal server error']];
+            };
         } else {
             [404, [], ['not found']];
         }

@@ -6,22 +6,22 @@ with 'Mesos::JobScheduler::Role::HasLogger';
 
 after log_debug => sub {
     my ($self, $msg) = @_;
-    warn "> DEBUG | $msg\n";
+    print STDERR "> DEBUG | $msg\n";
 };
 
 after log_info => sub {
     my ($self, $msg) = @_;
-    warn "> INFO | $msg\n";
+    print STDERR "> INFO | $msg\n";
 };
 
 after log_error => sub {
     my ($self, $msg) = @_;
-    warn "> ERROR | $msg\n";
+    print STDERR "> ERROR | $msg\n";
 };
 
 after log_fatal => sub {
     my ($self, $msg) = @_;
-    warn "> FATAL | $msg\n";
+    print STDERR "> FATAL | $msg\n";
 };
 
 1;

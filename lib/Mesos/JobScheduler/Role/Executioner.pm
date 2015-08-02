@@ -95,14 +95,14 @@ sub start_execution {
 sub finish_execution {
     my ($self, $id) = @_;
     my $execution = $self->_remove_execution($id);
-    $self->log_info('started execution for job ' . $execution->{job}->id);
+    $self->log_info('finished execution for job ' . $execution->{job}->id);
     return $execution;
 }
 
 sub fail_execution {
     my ($self, $id) = @_;
     my $execution = $self->_remove_execution($id);
-    $self->log_info('started execution for job ' . $execution->{job}->id);
+    $self->log_info('failed execution for job ' . $execution->{job}->id);
     return $execution;
 }
 
