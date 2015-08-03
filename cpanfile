@@ -3,6 +3,8 @@ requires 'AnyEvent::Future';
 requires 'DateTime::Event::Cron';
 requires 'DateTime::Format::RFC3339';
 requires 'Exporter::Tiny';
+requires 'FindBin';
+requires 'FindBin::libs';
 requires 'Getopt::Long::Descriptive';
 requires 'Hash::Ordered';
 requires 'JSON';

@@ -2,10 +2,10 @@
 use strict;
 use warnings;
 use Getopt::Long;
+use DateTime;
 use DateTime::Format::RFC3339;
 use JSON qw(encode_json);
 use LWP::UserAgent;
-use Mesos::JobScheduler::Utils qw(now);
 
 my %opts = (host => 'http://localhost:8080');
 GetOptions(\%opts, 'host=s');
@@ -13,10 +13,13 @@ GetOptions(\%opts, 'host=s');
 my ($cmd) = @ARGV;
 $cmd //= 'echo some test job';
 
+my $now = DateTime::Format::RFC3339->format_datetime(
+    DateTime->now(time_zone => 'UTC'),
+);
 my $job = {
     command   => $cmd,
     name      => 'example job',
-    scheduled => DateTime::Format::RFC3339->format_datetime(now()),
+    scheduled => $now,
     type      => 'OneOff',
 };
 
