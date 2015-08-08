@@ -60,9 +60,9 @@ sub test_basic_task_scheduling {
     my $offer = $test->new_offer;
     $scheduler->resourceOffers($driver, [$offer]);
 
-    my ($offer_id, $tasks) = @{$driver->{launchTasks}||[]};
+    my ($offer_ids, $tasks) = @{$driver->{launchTasks}||[]};
     is scalar(@$tasks), 1, 'launched 1 task after queueing 1 execution';
-    is_deeply $offer_id, $offer->{id}, 'launched offer with matching id';
+    is_deeply $offer_ids->[0], $offer->{id}, 'launched offer with matching id';
     is $tasks->[0]->{command}{value}, $job->command, 'launched task with command from job';
 }
 
