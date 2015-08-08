@@ -1,11 +1,10 @@
 package Mesos::JobScheduler::Job::OneOff;
 
-use DateTime::Format::RFC3339;
-use Types::DateTime qw(DateTimeUTC Format);
-use Moo;
+use Mesos::JobScheduler::Types qw(DateTime);
 use Mesos::JobScheduler::Utils qw(now);
-extends 'Mesos::JobScheduler::Job';
+use Moo;
 use namespace::autoclean;
+extends 'Mesos::JobScheduler::Job';
 
 =head1 ATTRIBUTES
 
@@ -15,7 +14,7 @@ use namespace::autoclean;
 
 has scheduled => (
     is      => 'ro',
-    isa     => DateTimeUTC->plus_coercions(Format['RFC3339']),
+    isa     => DateTime,
     coerce  => 1,
     default => sub { now() },
 );
@@ -23,7 +22,7 @@ has scheduled => (
 around TO_JSON => sub {
     my ($orig, $self) = @_;
     my $object = $self->$orig;
-    $object->{scheduled} = DateTime::Format::RFC3339->format_datetime($self->scheduled);
+    $object->{scheduled} = $self->scheduled;
     return $object;
 };
 

@@ -1,5 +1,6 @@
 requires 'namespace::autoclean', '0.16';
 requires 'AnyEvent::Future';
+requires 'Class::Method::Modifiers';
 requires 'DateTime::Event::Cron';
 requires 'DateTime::Format::RFC3339';
 requires 'Exporter::Tiny';
@@ -16,8 +17,8 @@ requires 'Proc::Daemon';
 requires 'Plack::Request';
 requires 'Router::Simple';
 requires 'Twiggy::Server';
-requires 'Types::DateTime';
 requires 'Types::UUID';
+requires 'UUID::Tiny';
 
 on develop => sub {
     requires 'Dist::Zilla::Plugin::ExtraTests';

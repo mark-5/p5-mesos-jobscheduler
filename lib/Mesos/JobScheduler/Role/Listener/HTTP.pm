@@ -1,8 +1,8 @@
 package Mesos::JobScheduler::Role::Listener::HTTP;
 
 use JSON qw(decode_json);
+use Mesos::JobScheduler::Types qw(to_Job);
 use Mesos::JobScheduler::Utils qw(psgi_json);
-use Module::Runtime qw(require_module);
 use Plack::Request;
 use Router::Simple;
 use Scalar::Util qw(weaken);
@@ -53,6 +53,7 @@ sub _build_psgi_app {
                 $self->$action($req, $match);
             } catch {
                 [500, [], ['internal server error']];
+                $self->log_error($_);
             };
         } else {
             [404, [], ['not found']];
@@ -116,14 +117,6 @@ sub _psgi_decode_body {
     return decode_json($raw);
 }
 
-sub _json_to_job {
-    my ($self, $json) = @_;
-    $json = {%$json};
-    my $class = join '::', 'Mesos::JobScheduler::Job', delete $json->{type};
-    require_module($class);
-    return $class->new(%$json);
-}
-
 sub _psgi_get_executions {
     my ($self, $req) = @_;
     my $query = $req->query_parameters;
@@ -151,8 +144,7 @@ sub _psgi_get_job {
 sub _psgi_add_job {
     my ($self, $req, $match) = @_;
     my $query = $req->query_parameters;
-    my $json  = $self->_psgi_decode_body($req);
-    my $job   = $self->_json_to_job($json);
+    my $job   = to_Job $self->_psgi_decode_body($req);
 
     $self->add_job($job);
     return psgi_json($job, {pretty => $query->{pretty}});

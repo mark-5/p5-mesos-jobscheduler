@@ -1,7 +1,7 @@
 package Mesos::JobScheduler::Job::Cron;
 
 use DateTime::Event::Cron;
-use DateTime::Format::RFC3339;
+use Mesos::JobScheduler::Types qw(DateTime);
 use Mesos::JobScheduler::Utils qw(now);
 use Types::DateTime qw(DateTimeUTC Format);
 use Moo;
@@ -37,7 +37,8 @@ sub _build_crontab_obj {
 
 has scheduled => (
     is      => 'ro',
-    isa     => DateTimeUTC->plus_coercions(Format['RFC3339']),
+    isa     => DateTime,
+    coerce  => 1,
     lazy    => 1,
     builder => '_build_scheduled',
 );
@@ -57,8 +58,8 @@ sub next {
 around TO_JSON => sub {
     my ($orig, $self) = @_;
     my $object = $self->$orig;
-    $object->{crontab} = $self->crontab.'';
-    $object->{scheduled} = DateTime::Format::RFC3339->format_datetime($self->scheduled);
+    $object->{crontab}   = $self->crontab.'';
+    $object->{scheduled} = $self->scheduled;
     return $object;
 };
 

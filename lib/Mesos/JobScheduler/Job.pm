@@ -1,12 +1,13 @@
 package Mesos::JobScheduler::Job;
 
+use Module::Runtime qw(require_module);
 use Types::Standard qw(Dict Num Optional);
 use Types::UUID qw(Uuid);
 use Moo;
 use namespace::autoclean;
 with qw(
-    MooX::Rebuild
     Mesos::JobScheduler::Role::HasId
+    Mesos::JobScheduler::Role::Immutable
 );
 
 # ABSTRACT: a base class for Mesos::JobScheduler jobs
@@ -46,11 +47,10 @@ has resources => (
     default => sub { {} },
 );
 
-sub update {
-    my ($self, %args) = @_;
-    # don't generate a new id
-    return $self->rebuild(id => $self->id, %args);
-}
+around update => sub {
+    my ($orig, $self, %args) = @_;
+    return $self->$orig(id => $self->id, %args);
+};
 
 sub BUILD {
     my ($self)   = @_;
@@ -66,5 +66,17 @@ sub TO_JSON {
     ($object->{type} = ref $self) =~ s/^Mesos::JobScheduler::Job:://;
     return $object;
 }
+
+around new => sub {
+    my ($orig, $self) = splice(@_, 0, 2);
+    my %args = @_ == 1 ? %{$_[0]} : @_;
+    if (my $type = delete $args{type}) {
+        my $class = "Mesos::JobScheduler::Job::$type";
+        require_module($class);
+        return $class->new(%args);
+    } else {
+        return $self->$orig(@_);
+    }
+};
 
 1;

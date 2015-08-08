@@ -3,8 +3,9 @@ package Mesos::JobScheduler::Utils;
 use strict;
 use warnings;
 use DateTime;
-use DateTime::Format::RFC3339;
 use JSON qw();
+use Mesos::JobScheduler::DateTime;
+use Time::HiRes qw();
 use base 'Exporter::Tiny';
 our @EXPORT_OK = qw(
     decode_json
@@ -13,18 +14,12 @@ our @EXPORT_OK = qw(
     psgi_json
 );
 
-sub now {
-    my (%args) = @_;
-    return DateTime->now(time_zone => 'UTC');
-}
+sub now { Mesos::JobScheduler::DateTime->now(@_) }
 
 sub decode_json { goto &JSON::decode_json }
 
 sub encode_json {
     my ($object, $opts) = @_;
-    local *DateTime::TO_JSON = sub {
-        return DateTime::Format::RFC3339->format_datetime($_[0]);
-    } unless DateTime->can('TO_JSON');
     return JSON::to_json($object, {
         allow_blessed   => 1,
         allow_nonref    => 1,
@@ -36,7 +31,7 @@ sub encode_json {
 
 sub psgi_json {
     my ($object, $opts) = @_;
-    $opts = {map {($_ => $opts->{$_})x!! $opts->{$_}} keys %{$opts||{}}};
+    $opts = {%$opts};
     my $status = delete $opts->{status} // 200;
 
     return [
