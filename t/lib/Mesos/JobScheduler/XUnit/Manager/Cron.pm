@@ -36,13 +36,13 @@ sub test_queueing_cron_job {
     is scalar($manager->queued), 1, 'queue has item after job is ready';
 
     my ($queued) = $manager->queued;
-    is $queued->{job}->id, $cron->id, 'execution in queue has job with orignal id';
+    is $queued->job->id, $cron->id, 'execution in queue has job with orignal id';
 
     $test->fake_the_date(now => now()->add(minutes => 5));
     $manager->_reset_next_timer;
     is scalar($manager->queued), 2, 'queue has another item after cron repeats';
 
-    my ($first, $second) = map $_->{job}, $manager->queued;
+    my ($first, $second) = map $_->job, $manager->queued;
     is $first->id, $second->id, 'executions have jobs with same ids';
     cmp_ok $first->scheduled, '<', $second->scheduled, 'executions have jobs with different times';
 }

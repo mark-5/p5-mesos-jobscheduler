@@ -1,11 +1,11 @@
 package Mesos::JobScheduler::Role::Executioner;
 
-use Hash::Ordered;
+use Mesos::JobScheduler::Types qw(Execution);
 use Mesos::JobScheduler::Utils qw(now);
-use Types::UUID qw(Uuid);
 use Moo::Role;
 use namespace::autoclean;
 with qw(
+    Mesos::JobScheduler::Role::HasStorage
     Mesos::JobScheduler::Role::Interface::Executioner
     Mesos::JobScheduler::Role::Interface::Logger
 );
@@ -30,91 +30,83 @@ with qw(
 
 =cut
 
-has _executions => (
-    is      => 'ro',
-    default => sub { Hash::Ordered->new },
-);
-
-has _execution_statuses => (
-    is      => 'ro',
-    default => sub { {} },
-);
-
-sub _add_execution {
-    my ($self, $job, $status) = @_;
-    my $id = Uuid->generate;
-    $self->_executions->push($id, {
-        added  => now(),
-        id     => $id,
-        job    => $job,
-    });
-    $self->_update_execution_status($id, $status);
-    return $id;
+sub _executions {
+    my ($self, $cmd, $node, @args) = @_;
+    $node = "/executioner/$node";
+    return $self->storage->$cmd($node, @args);
 }
 
-sub _update_execution_status {
+sub _update_execution {
     my ($self, $id, $status) = @_;
-    my $execution = $self->_executions->get($id);
-    if (my $old = delete $execution->{status}) {
-        $self->_execution_statuses->{$old}->delete($id);
-    }
-    $execution->{status}  = $status;
-    $execution->{updated} = now();
+    my $old = $self->get_execution($id);
+    my $new = $old->update(status => $status);
 
-    my $ids = $self->_execution_statuses->{$status} //= Hash::Ordered->new;
-    $ids->push($id, $execution);
-    return $execution;
+    $self->_executions(store => "execution/$id", $new);
+    $self->_executions(delete => $old->status."/$id");
+    $self->_executions(store => "$status/$id");
+    return $new;
 }
 
 sub _remove_execution {
     my ($self, $id) = @_;
-    my $execution  = $self->_executions->delete($id);
-    if (my $status = $execution->{status}) {
-        return $self->_execution_statuses->{$status}->delete($id);
+    my $old = $self->_executions(delete => "execution/$id");
+    if (my $status = $old->{status}) {
+        $self->_executions(delete => "$status/$id");
     }
+    return $old;
 }
 
 sub get_execution {
     my ($self, $id) = @_;
-    return $self->_executions->get($id);
+    my $info = $self->_executions(retrieve => "execution/$id") or return;
+    return Execution->coerce($info);
 }
 
 sub queue_execution {
     my ($self, $job) = @_;
     $self->log_info('queued execution for job ' . $job->id);
-    return $self->_add_execution($job, 'queued');
+
+    my $execution = Execution->new({job => $job, status => 'queued'});
+    my $id = $execution->id;
+    $self->_executions(store => "execution/$id", $execution);
+    $self->_executions(store => "queued/$id");
+
+    return $id;
 }
 
 sub start_execution {
     my ($self, $id) = @_;
-    my $execution = $self->_update_execution_status($id, 'running');
-    $self->log_info('started execution for job ' . $execution->{job}->id);
+    my $execution = $self->_update_execution($id, 'running');
+    $self->log_info('started execution for job ' . $execution->job->id);
     return $execution;
 }
 
 sub finish_execution {
     my ($self, $id) = @_;
     my $execution = $self->_remove_execution($id);
-    $self->log_info('finished execution for job ' . $execution->{job}->id);
+    $self->log_info('finished execution for job ' . $execution->job->id);
     return $execution;
 }
 
 sub fail_execution {
     my ($self, $id) = @_;
     my $execution = $self->_remove_execution($id);
-    $self->log_info('failed execution for job ' . $execution->{job}->id);
+    $self->log_info('failed execution for job ' . $execution->job->id);
     return $execution;
 }
 
 sub executions {
     my ($self) = @_;
-    return $self->_executions->values;
+    return $self->_executions(list => "execution");
 }
 
 sub queued {
     my ($self) = @_;
-    my $queued = $self->_execution_statuses->{queued} //= Hash::Ordered->new;
-    return map { {%$_} } $queued->values;
+    my @queue =
+        sort { $a->updated <=> $b->updated }
+        map  { $self->get_execution($_)    }
+        $self->_executions(list => "queued");
+    return @queue;
 }
 
 1;

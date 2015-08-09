@@ -36,10 +36,10 @@ sub test_queueing_one_off {
     is scalar($manager->queued), 1, 'queue has item after job is ready';
 
     my ($queued) = $manager->queued;
-    is $queued->{job}->id, $job->id, 'execution in queue has job with orignal id';
+    is $queued->job->id, $job->id, 'execution in queue has job with orignal id';
 
     $manager->finish_execution($queued->{id});
-    is $manager->get_job($queued->{job}->id), undef;
+    is $manager->get_job($queued->job->id), undef;
 }
 
 sub test_execution_cleanup {
@@ -50,7 +50,7 @@ sub test_execution_cleanup {
 
     my ($execution) = $manager->queued;
     $manager->finish_execution($execution->{id});
-    is $manager->get_job($execution->{job}->id), undef, 'job is removed after execution';
+    is $manager->get_job($execution->job->id), undef, 'job is removed after execution';
 }
 
 sub test_update_one_off {

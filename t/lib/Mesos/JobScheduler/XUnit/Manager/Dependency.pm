@@ -21,7 +21,7 @@ sub test_dependency_queueing {
 
     my @queued = $manager->queued;
     is scalar(@queued), 1, 'queue has item after completing parent job';
-    is $queued[0]->{job}->command, $child->command, 'child job queued after parent execution finishes'
+    is $queued[0]->job->command, $child->command, 'child job queued after parent execution finishes'
 }
 
 sub test_parent_job_failure {
@@ -60,7 +60,7 @@ sub test_updating_dependency {
     $manager->finish_execution($parent2_id);
     my @queued = $manager->queued;
     is scalar(@queued), 1, 'item queued after new parent executed';
-    is $queued[0]->{job}->command, $child->command, 'queued dependency after new parent executed';
+    is $queued[0]->job->command, $child->command, 'queued dependency after new parent executed';
 }
 
 sub test_multiple_parent_executions {
@@ -80,7 +80,7 @@ sub test_multiple_parent_executions {
 
     is scalar($manager->queued), 3, 'queue has 3 items after 3 parent executions';
 
-    my $all_children = not grep {$_->{job}->command ne $child->command} $manager->queued;
+    my $all_children = not grep {$_->job->command ne $child->command} $manager->queued;
     ok $all_children, 'all queued items are child jobs after parent executions';
 }
 

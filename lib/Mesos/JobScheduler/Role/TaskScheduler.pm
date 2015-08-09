@@ -21,17 +21,17 @@ sub resourceOffers {
     my %tasks;
 
     for my $execution ($self->queued) {
-        my $job   = $execution->{job};
+        my $job   = $execution->job;
         my $offer = $self->_claim_offer_for_job($job, $offers) or next;
         my $task  = $self->_job_to_task($job, $offer);
 
         push @{$tasks{$offer->{id}{value}}||=[]}, $task;
         $self->_tasks->{$task->{task_id}{value}} = {
-            execution_id => $execution->{id},
+            execution_id => $execution->id,
             launched     => now(),
             task         => $task,
         };
-        $self->start_execution($execution->{id});
+        $self->start_execution($execution->id);
     }
 
     for my $offer (@$offers) {

@@ -8,8 +8,10 @@ use Type::Library
     -base,
     -declare => qw(
         DateTime
+        Execution
+        Job
     );
-use Types::Standard qw(Num Str);
+use Types::Standard qw(HashRef InstanceOf Num Str);
 use Type::Utils -all;
 
 class_type DateTime, {class => 'Mesos::JobScheduler::DateTime'};
@@ -21,5 +23,17 @@ do {
     Mesos::JobScheduler::DateTime->from_object(object => $obj);
 }
 __END__
+
+class_type Execution, {class => 'Mesos::JobScheduler::Execution'};
+
+coerce Execution, from HashRef, 'Mesos::JobScheduler::Execution->new($_)';
+
+class_type Job, {class => 'Mesos::JobScheduler::Job'};
+
+coerce Job, from HashRef, 'Mesos::JobScheduler::Job->new(%$_)';
+
+
+require Mesos::JobScheduler::Execution;
+require Mesos::JobScheduler::Job;
 
 1;

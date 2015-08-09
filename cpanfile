@@ -19,6 +19,7 @@ requires 'Router::Simple';
 requires 'Twiggy::Server';
 requires 'Types::UUID';
 requires 'UUID::Tiny';
+requires 'ZooKeeper';
 
 on develop => sub {
     requires 'Dist::Zilla::Plugin::ExtraTests';
