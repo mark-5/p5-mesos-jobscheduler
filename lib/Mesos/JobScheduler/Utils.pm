@@ -16,7 +16,13 @@ our @EXPORT_OK = qw(
 
 sub now { Mesos::JobScheduler::DateTime->now(@_) }
 
-sub decode_json { goto &JSON::decode_json }
+sub decode_json {
+    my ($txt, $opts) = @_;
+    return JSON::from_json($txt, {
+        allow_nonref => 1,
+        %{$opts||{}},
+    });
+}
 
 sub encode_json {
     my ($object, $opts) = @_;

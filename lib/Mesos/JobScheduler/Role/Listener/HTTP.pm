@@ -52,8 +52,8 @@ sub _build_psgi_app {
             try {
                 $self->$action($req, $match);
             } catch {
-                [500, [], ['internal server error']];
                 $self->log_error($_);
+                return [500, [], ['internal server error']];
             };
         } else {
             [404, [], ['not found']];

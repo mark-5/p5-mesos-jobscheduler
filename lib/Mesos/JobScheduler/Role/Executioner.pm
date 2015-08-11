@@ -1,6 +1,6 @@
 package Mesos::JobScheduler::Role::Executioner;
 
-use Mesos::JobScheduler::Types qw(Execution);
+use Mesos::JobScheduler::Types qw(to_Execution);
 use Mesos::JobScheduler::Utils qw(now);
 use Moo::Role;
 use namespace::autoclean;
@@ -32,7 +32,7 @@ with qw(
 
 sub _executions {
     my ($self, $cmd, $node, @args) = @_;
-    $node = "/executioner/$node";
+    $node = "/mesos-jobscheduler/executioner/$node";
     return $self->storage->$cmd($node, @args);
 }
 
@@ -41,15 +41,15 @@ sub _update_execution {
     my $old = $self->get_execution($id);
     my $new = $old->update(status => $status);
 
-    $self->_executions(store => "execution/$id", $new);
+    $self->_executions(update => "execution/$id", $new);
     $self->_executions(delete => $old->status."/$id");
-    $self->_executions(store => "$status/$id");
+    $self->_executions(store  => "$status/$id");
     return $new;
 }
 
 sub _remove_execution {
     my ($self, $id) = @_;
-    my $old = $self->_executions(delete => "execution/$id");
+    my $old = to_Execution $self->_executions(delete => "execution/$id");
     if (my $status = $old->{status}) {
         $self->_executions(delete => "$status/$id");
     }
@@ -59,14 +59,14 @@ sub _remove_execution {
 sub get_execution {
     my ($self, $id) = @_;
     my $info = $self->_executions(retrieve => "execution/$id") or return;
-    return Execution->coerce($info);
+    return to_Execution $info;
 }
 
 sub queue_execution {
     my ($self, $job) = @_;
     $self->log_info('queued execution for job ' . $job->id);
 
-    my $execution = Execution->new({job => $job, status => 'queued'});
+    my $execution = to_Execution {job => $job, status => 'queued'};
     my $id = $execution->id;
     $self->_executions(store => "execution/$id", $execution);
     $self->_executions(store => "queued/$id");

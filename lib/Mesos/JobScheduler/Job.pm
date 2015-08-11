@@ -1,5 +1,7 @@
 package Mesos::JobScheduler::Job;
 
+use Mesos::JobScheduler::Types qw(DateTime);
+use Mesos::JobScheduler::Utils qw(now);
 use Module::Runtime qw(require_module);
 use Types::Standard qw(Dict Num Optional);
 use Types::UUID qw(Uuid);
@@ -26,6 +28,13 @@ with qw(
 
 =cut
 
+has added => (
+    is      => 'ro',
+    isa     => DateTime,
+    coerce  => 1,
+    default => sub { now() },
+);
+
 has command => (
     is       => 'ro',
     required => 1,
@@ -47,9 +56,20 @@ has resources => (
     default => sub { {} },
 );
 
+has updated => (
+    is      => 'ro',
+    isa     => DateTime,
+    coerce  => 1,
+    default => sub { now() },
+);
+
 around update => sub {
     my ($orig, $self, %args) = @_;
-    return $self->$orig(id => $self->id, %args);
+    return $self->$orig(
+        added => $self->added,
+        id    => $self->id,
+        %args,
+    );
 };
 
 sub BUILD {

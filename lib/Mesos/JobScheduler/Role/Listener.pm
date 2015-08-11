@@ -2,12 +2,12 @@ package Mesos::JobScheduler::Role::Listener;
 
 use Moo::Role;
 use namespace::autoclean;
+with 'Mesos::JobScheduler::Role::HasBUILD';
 
 sub start_listener {};
 
 sub stop_listener {};
 
-sub BUILD {}
 after BUILD => sub { shift->start_listener };
 
 sub DEMOLISH {}

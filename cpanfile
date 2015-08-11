@@ -16,6 +16,7 @@ requires 'MooX::Rebuild';
 requires 'Proc::Daemon';
 requires 'Plack::Request';
 requires 'Router::Simple';
+requires 'Try::Tiny';
 requires 'Twiggy::Server';
 requires 'Types::UUID';
 requires 'UUID::Tiny';

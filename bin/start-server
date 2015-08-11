@@ -16,6 +16,7 @@ my ($opt, $usage) = describe_options(
     ['listen|l=s',  'the address to listen to http requests on'],
     ['master|m=s',  'the mesos master to use', {required => 1}],
     ['pidfile|p=s', 'the path to the pid file, if running with --daemonize', {default => '/var/run/mesos-jobscheduler.pid'}],
+    ['zk|z=s',      'the address of the zookeeper server to use', {required => 1}],
 );
 my ($host, $port) = split ':', $opt->{listen} // '';
 $host ||= '0.0.0.0';
@@ -31,6 +32,9 @@ my $scheduler = Mesos::JobScheduler->new(
     http => {
         host => $host || '0.0.0.0',
         port => $port || 8080,
+    },
+    zk => {
+        hosts => $opt->{zk},
     },
 );
 

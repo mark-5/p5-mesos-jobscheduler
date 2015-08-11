@@ -1,10 +1,12 @@
 package Mesos::JobScheduler::Role::Registrar;
 
-use Hash::Ordered;
+use Mesos::JobScheduler::Types qw(to_Job);
 use Mesos::JobScheduler::Utils qw(now);
 use Moo::Role;
 use namespace::autoclean;
 with qw(
+    Mesos::JobScheduler::Role::HasBUILD
+    Mesos::JobScheduler::Role::HasStorage
     Mesos::JobScheduler::Role::Interface::Logger
     Mesos::JobScheduler::Role::Interface::Registrar
 );
@@ -25,47 +27,53 @@ with qw(
 
 =cut
 
-has _registry => (
-    is      => 'ro',
-    default => sub { Hash::Ordered->new },
-);
+sub _registry {
+    my ($self, $cmd, $node, @args) = @_;
+    $node = "/mesos-jobscheduler/registrar/$node";
+    return $self->storage->$cmd($node, @args);
+}
 
 
 sub add_job {
-    my ($self, $job) = @_;
-    $self->_registry->push($job->id, {
-        added => now(),
-        job   => $job,
-    });
+    my ($self, $job, %args) = @_;
+    $self->_registry(store => $job->id, $job) unless $args{from_storage};
     $self->log_info("added job " . $job->id);
 }
 
 sub get_job {
     my ($self, $id) = @_;
-    my $registered = $self->_registry->get($id) // {};
-    return $registered->{job};
+    my $info = $self->_registry(retrieve => $id) or return;
+    return to_Job $info;
 }
 
 sub remove_job {
     my ($self, $id) = @_;
-    my $old = $self->_registry->delete($id);
-    $self->log_info("removed job " . $old->{job}->id);
-    return $old->{job};
+    my $old = to_Job $self->_registry(delete => $id);
+    $self->log_info("removed job $id");
+    return $old;
 }
 
 sub update_job {
     my ($self, $id, %args) = @_;
-    my $old = $self->_registry->get($id);
-    $old->{updated} = now();
-    my $job = $old->{job} = $old->{job}->update(%args);
+    my $old = $self->get_job($id);
+    my $new = $old->update(%args);
 
-    $self->log_info("updated job " . $job->id);
-    return $job;
+    $self->_registry(update => $id, $new);
+    $self->log_info("updated job $id");
+    return $new;
 }
 
 sub jobs {
     my ($self) = @_;
-    return $self->_registry->values;
+    my @jobs =
+        map  { $self->get_job($_) }
+        $self->storage->list('/mesos-jobscheduler/registrar');
+    return @jobs;
 }
+
+after BUILD => sub {
+    my ($self) = @_;
+    $self->add_job($_, from_storage => 1) for $self->jobs;
+};
 
 1;
