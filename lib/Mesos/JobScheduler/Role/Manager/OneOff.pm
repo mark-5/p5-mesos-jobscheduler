@@ -45,7 +45,7 @@ around update_job => sub {
 
     if ($self->_is_one_off_job($id)) {
         $self->_remove_one_off_job($id);
-        $self->_add_one_off_job($new);
+        $self->_add_one_off_job($new) unless $new->suspended;
     }
 
     return $new;

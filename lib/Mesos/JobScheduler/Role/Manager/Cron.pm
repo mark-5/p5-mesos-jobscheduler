@@ -12,8 +12,6 @@ with qw(
     Mesos::JobScheduler::Role::Manager
 );
 
-sub test_setup { unfake_the_date() }
-
 sub _add_cron_job {
     my ($self, $job) = @_;
     $self->add_timer($job,
@@ -51,7 +49,7 @@ around update_job => sub {
 
     if ($self->_is_cron_job($id)) {
         $self->_remove_cron_job($id);
-        $self->_add_cron_job($new);
+        $self->_add_cron_job($new) unless $new->suspended;
     }
 
     return $new;

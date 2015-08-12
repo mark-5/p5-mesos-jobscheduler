@@ -64,6 +64,7 @@ sub get_execution {
 
 sub queue_execution {
     my ($self, $job) = @_;
+    return if $job->suspended;
     $self->log_info('queued execution for job ' . $job->id);
 
     my $execution = to_Execution {job => $job, status => 'queued'};

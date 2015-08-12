@@ -87,5 +87,22 @@ sub test_remove_one_off {
     is scalar($manager->queued), 0, 'queue stays empty after removing job';
 }
 
+sub test_suspending_one_off_job {
+    my ($test)  = @_;
+    my $job     = $test->new_job('OneOff',
+        scheduled => now()->add(minutes => 5),
+    );
+    my $manager = $test->new_manager('OneOff');
+    $manager->add_job($job);
+
+    $manager->update_job($job->id, suspended => 1);
+    $test->fake_the_date(now => now()->add(minutes => 5));
+    $manager->_reset_next_timer;
+    is scalar($manager->queued), 0, 'queue stays empty after suspending job';
+
+    $manager->update_job($job->id, suspended => 0);
+    is scalar($manager->queued), 1, 'queue has 1 entry after resuming job';
+}
+
 __PACKAGE__->meta->make_immutable;
 1;

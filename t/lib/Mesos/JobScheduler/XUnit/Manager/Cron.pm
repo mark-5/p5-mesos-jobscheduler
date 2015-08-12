@@ -77,5 +77,24 @@ sub test_remove_cron_job {
     is scalar($manager->queued), 0, 'queue stays empty after removing job';
 }
 
+sub test_suspending_cron_job {
+    my ($test)  = @_;
+    my $cron    = $test->new_job('Cron', crontab => '0-59/5 * * * *');
+    my $manager = $test->new_manager('Cron');
+    $test->fake_the_date(now => now()->set_minute(1));
+    $manager->add_job($cron);
+
+    $manager->update_job($cron->id, suspended => 1);
+    $test->fake_the_date(now => now()->add(minutes => 4));
+    $manager->_reset_next_timer;
+    is scalar($manager->queued), 0, 'queue stays empty after suspending job';
+
+    $test->fake_the_date(now => now()->add(minutes => 1));
+    $manager->update_job($cron->id, suspended => 0);
+    $test->fake_the_date(now => now()->add(minutes => 4));
+    $manager->_reset_next_timer;
+    is scalar($manager->queued), 1, 'queue has 1 entry after resuming job';
+}
+
 __PACKAGE__->meta->make_immutable;
 1;

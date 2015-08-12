@@ -101,5 +101,28 @@ sub test_removing_dependency {
     is scalar($manager->queued), 0, 'no items queued after removing job dependency';
 }
 
+sub test_suspending_dependency {
+    my ($test) = @_;
+    my $manager = $test->new_manager('Dependency');
+    my $parent  = $test->new_job;
+    my $child   = $test->new_job('Dependency',
+        parent => $parent->id,
+    );
+    $manager->add_job($parent);
+    $manager->add_job($child);
+
+    my $parent_id = $manager->queue_execution($parent);
+    $manager->update_job($child->id, suspended => 1);
+    $manager->finish_execution($parent_id);
+
+    is scalar($manager->queued), 0, 'no items queued after suspending job dependency';
+
+    $parent_id = $manager->queue_execution($parent);
+    $manager->update_job($child->id, suspended => 0);
+    $manager->finish_execution($parent_id);
+
+    is scalar($manager->queued), 1, '1 item queued after resuming job dependency';
+}
+
 __PACKAGE__->meta->make_immutable;
 1;

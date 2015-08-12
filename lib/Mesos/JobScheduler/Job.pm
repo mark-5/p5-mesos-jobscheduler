@@ -22,6 +22,8 @@ with qw(
 
 =head2 resources
 
+=head2 suspended
+
 =head1 METHODS
 
 =head2 update
@@ -56,6 +58,11 @@ has resources => (
     default => sub { {} },
 );
 
+has suspended => (
+    is      => 'ro',
+    default => sub { 0 },
+);
+
 has updated => (
     is      => 'ro',
     isa     => DateTime,
@@ -82,7 +89,7 @@ sub TO_JSON {
     my ($self) = @_;
     my $object = {map {
         ($_, $self->$_)
-    } qw(command id name resources)};
+    } qw(command id name resources suspended)};
     ($object->{type} = ref $self) =~ s/^Mesos::JobScheduler::Job:://;
     return $object;
 }

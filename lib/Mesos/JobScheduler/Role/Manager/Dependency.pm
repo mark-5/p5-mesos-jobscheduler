@@ -54,7 +54,7 @@ around update_job => sub {
 
     if ($self->_is_job_dependency($id)) {
         $self->_remove_job_dependency($id);
-        $self->_add_job_dependency($new);
+        $self->_add_job_dependency($new) unless $new->suspended;
     }
 
     return $new;
