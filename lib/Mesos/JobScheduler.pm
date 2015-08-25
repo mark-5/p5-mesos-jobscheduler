@@ -10,7 +10,7 @@ extends 'Bread::Board::Container';
 # ABSTRACT: a base class for Mesos job scheduling frameworks
 
 has '+name' => (
-    default => 'mesos-jobscheduler',
+    default => 'app',
 );
 
 has config => (
@@ -26,6 +26,12 @@ sub BUILD {
 
         service config => literal($self->config);
 
+        service event_loop => (
+            class        => 'Mesos::JobScheduler::EventLoop',
+            lifecycle    => 'Singleton',
+            dependencies => [qw(config)],
+        );
+
         service logger => (
             class        => 'Mesos::JobScheduler::Logger',
             lifecycle    => 'Singleton',
@@ -39,7 +45,7 @@ sub BUILD {
         );
 
         service registry => (
-            class        => 'Mesos::JobScheduler::Registrar',
+            class        => 'Mesos::JobScheduler::Registry',
             lifecycle    => 'Singleton',
             dependencies => [qw(logger storage)],
         );
@@ -53,7 +59,7 @@ sub BUILD {
         service manager => (
             class        => 'Mesos::JobScheduler::Manager',
             lifecycle    => 'Singleton',
-            dependencies => [qw(config logger registry executioner)],
+            dependencies => [qw(event_loop executioner logger registry)],
         );
 
         service framework => (

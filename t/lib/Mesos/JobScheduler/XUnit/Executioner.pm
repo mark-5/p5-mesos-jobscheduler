@@ -1,10 +1,13 @@
 package Mesos::JobScheduler::XUnit::Executioner;
 use Test::Class::Moose;
 use namespace::autoclean;
-with qw(
-    Mesos::JobScheduler::XUnit::Role::ExecutionerFactory
-    Mesos::JobScheduler::XUnit::Role::JobFactory
-);
+extends 'Mesos::JobScheduler::XUnit';
+with 'Mesos::JobScheduler::XUnit::Role::JobFactory';
+
+sub new_executioner {
+    my ($test)  = @_;
+    return $test->resolve(service => 'executioner');
+}
 
 sub test_lifecycle {
     my ($test) = @_;
@@ -12,18 +15,18 @@ sub test_lifecycle {
     my $job         = $test->new_job;
 
     my $to_finish = $executioner->queue($job);
-    is $executioner->retrieve($to_finish->id)->status, 'queued';
+    is $executioner->get($to_finish->id)->status, 'queued';
 
     $executioner->start($to_finish->id);
-    is $executioner->retrieve($to_finish->id)->status, 'started';
+    is $executioner->get($to_finish->id)->status, 'started';
 
     $executioner->finish($to_finish->id);
-    is $executioner->retrieve($to_finish->id), undef;
+    is $executioner->get($to_finish->id), undef;
 
     my $to_fail = $executioner->queue($job);
     $executioner->start($to_fail->id);
     $executioner->fail($to_fail->id);
-    is $executioner->retrieve($to_fail->id), undef;
+    is $executioner->get($to_fail->id), undef;
 }
 
 sub test_queued {

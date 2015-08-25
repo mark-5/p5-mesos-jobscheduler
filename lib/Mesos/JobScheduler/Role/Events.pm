@@ -22,7 +22,7 @@ sub on {
 
 sub off {
     my ($self, $event, $callback) = @_;
-    my $match  = join '#', grep {defined $_} $event, $callback;
+    my $match  = join '#', grep defined, $event, $callback;
     my @events = grep {/^\Q$match\E/} keys %{$self->_event_callbacks};
     delete @{$self->_event_callbacks}{@events};
 }
@@ -33,13 +33,15 @@ sub trigger {
     # get callbacks for specific event
     my @events = grep {/^\Q$event\E#.*/} keys %{$self->_event_callbacks};
     # get callbacks for event namespace
-    if (my ($ns) = $event =~ /^(.*):.*/) {
+    if (my ($ns) = $event =~ /^(.*?):/) {
         push @events, grep {/^\Q$ns\E#.*/} keys %{$self->_event_callbacks};
     }
-    # get callbacks registered for 'all'
-    push @events, grep {/^all#.*/} keys %{$self->_event_callbacks};
 
     $_->(@args) for @{$self->_event_callbacks}{@events};
+    for my $on_all (grep {/^all#.*/} keys %{$self->_event_callbacks}) {
+        my $callback = $self->_event_callbacks->{$on_all};
+        $callback->($event, @args);
+    }
 }
 
 sub once {
@@ -73,7 +75,7 @@ sub listen_to {
 
 sub stop_listening {
     my ($self, $other, $event, $callback) = @_;
-    my $match = join '#', grep {defined $_} $other, $event, $callback;
+    my $match = join '#', grep defined, $other, $event, $callback;
     my @ids   = grep {/^\Q$match\E/} keys %{$self->_events_listening_to};
     for my $id (@ids) {
         my $listener = delete $self->_events_listening_to->{$id};

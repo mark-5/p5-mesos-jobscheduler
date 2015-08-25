@@ -1,4 +1,4 @@
-package Mesos::JobScheduler::Logger;
+package Mesos::JobScheduler::Logger::STDERR;
 
 use Mesos::JobScheduler::Types qw(Config);
 use Moose;

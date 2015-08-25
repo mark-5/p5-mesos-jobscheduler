@@ -24,6 +24,11 @@ has logger => (
     default => sub { {} },
 );
 
+has manager => (
+    is      => 'ro',
+    default => sub { {} },
+);
+
 has storage => (
     is      => 'ro',
     default => sub { {} },

@@ -6,39 +6,51 @@ use namespace::autoclean;
 with 'Mesos::JobScheduler::Role::Events';
 
 has logger => (
-    is => 'ro',
+    is       => 'ro',
+    required => 1,
 );
 
 has storage => (
-    is => 'ro',
+    is       => 'ro',
+    required => 1,
 );
 
-sub create {
+sub all {
+    my ($self) = @_;
+    my @jobs =
+        sort { $a->created <=> $b->created }
+        map  { $self->get($_)              }
+        $self->storage->get_children('registry');
+    return @jobs;
+}
+
+sub add {
     my ($self, $job) = @_;
-    $self->storage->create('registry/'.$job->id, $job);
-    $self->trigger('create:'.$job->type, job => $job);
-    $self->logger->info('created job '.$job->id);
+    $self->storage->add('registry/'.$job->id, $job);
+    $self->logger->info('added job '.$job->id);
+    $self->trigger('add:'.$job->type, $job);
 }
 
-sub retrieve {
+sub remove {
     my ($self, $id) = @_;
-    return to_Job $self->storage->retrieve("registry/$id");
-}
-
-sub delete {
-    my ($self, $id) = @_;
-    my $job = $self->storage->delete("registry/$id");
-    $self->trigger('delete:'.$job->type, job => $job);
-    $self->logger->info("deleted job $id");
+    my $job = $self->storage->remove("registry/$id");
+    $self->logger->info("removed job $id");
+    $self->trigger('remove:'.$job->type, $job);
     return $job;
 }
 
+sub get {
+    my ($self, $id) = @_;
+    return to_Job $self->storage->get("registry/$id");
+}
+
 sub update {
-    my ($self, $new) = @_;
-    my $old = $self->retrieve($new->id);
-    $self->storage->update('registry/'.$new->id, $new);
-    $self->trigger('update:'.$new->type, new => $new, old => $old);
-    $self->logger->info('updated job '.$new->id);
+    my ($self, $id, %args) = @_;
+    my $old = $self->get($id);
+    my $new = $old->update(%args);
+    $self->storage->update("registry/$id", $new);
+    $self->logger->info("updated job $id");
+    $self->trigger('update:'.$new->type, $new, $old);
     return $new;
 }
 

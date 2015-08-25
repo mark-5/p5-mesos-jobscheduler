@@ -1,14 +1,18 @@
 requires 'namespace::autoclean', '0.16';
+requires 'AnyEvent::Future';
 requires 'Bread::Board';
 requires 'Class::Method::Modifiers';
 requires 'DateTime';
+requires 'DateTime::Event::Cron';
 requires 'DateTime::Format::RFC3339';
 requires 'Exporter::Tiny';
 requires 'Hash::Merge';
 requires 'JSON';
 requires 'Mesos';
+requires 'Module::Pluggable';
 requires 'Module::Runtime';
 requires 'Moose';
+requires 'MooseX::Traits::Pluggable';
 requires 'Scalar::Util';
 requires 'Time::HiRes';
 requires 'Type::Tiny';

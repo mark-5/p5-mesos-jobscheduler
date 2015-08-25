@@ -21,10 +21,10 @@ sub test_basic {
     $handler->on('wanted', sub { $triggered++ });
 
     $handler->trigger('not_wanted');
-    ok !$triggered, 'callback not triggered on unwanted event';
+    is $triggered, 0, 'callback not triggered on unwanted event';
 
     $handler->trigger('wanted');
-    ok $triggered, 'callback triggered on unwanted event';
+    is $triggered, 1, 'callback triggered on wanted event';
 
 
     my $second_trigger = 0;
@@ -32,8 +32,8 @@ sub test_basic {
 
     $triggered = 0;
     $handler->trigger('wanted');
-    ok $triggered, 'triggered first callback when after adding second callback';
-    ok $second_trigger, 'triggered second callback';
+    is $triggered, 1, 'triggered first callback when after adding second callback';
+    is $second_trigger, 1, 'triggered second callback';
 }
 
 sub test_off {
@@ -50,7 +50,7 @@ sub test_off {
     $handler->off('test-event', $first);
     $handler->trigger('test-event');
     ok !$triggered{first}, 'skipped first callback after turning it off explicitly';
-    ok $triggered{second}, 'triggered second callback';
+    is $triggered{second}, 1, 'triggered second callback';
 
     %triggered = ();
     $handler->off('test-event');
@@ -78,8 +78,8 @@ sub test_namespaces {
     $handler->on('ns:type', sub { $triggered{type}++ });
 
     $handler->trigger('ns:type');
-    ok $triggered{ns}, 'triggered namespace for event with namespace and event';
-    ok $triggered{type}, 'triggered type for event with matching namespace and type';
+    is $triggered{ns}, 1, 'triggered namespace for event with namespace and event';
+    is $triggered{type}, 1, 'triggered type for event with matching namespace and type';
 
     %triggered = ();
     $handler->trigger('ns:different-type');
@@ -87,7 +87,7 @@ sub test_namespaces {
 
     %triggered = ();
     $handler->trigger('ns');
-    ok $triggered{ns}, 'triggered namespace for event with no type';
+    is $triggered{ns}, 1, 'triggered namespace for event with no type';
     ok !$triggered{type}, 'did not trigger type for event with matching namespace but no type';
 
     %triggered = ();
@@ -104,11 +104,11 @@ sub test_once {
     $handler->once('once', sub { $triggered++ });
 
     $handler->trigger('once');
-    ok $triggered, 'triggered once event on first trigger';
+    is $triggered, 1, 'triggered once event on first trigger';
 
     $triggered = 0;
     $handler->trigger('once');
-    ok !$triggered, 'did not trigger once event on second trigger';
+    is $triggered, 0, 'did not trigger once event on second trigger';
 
 
     $triggered = 0;
@@ -118,6 +118,39 @@ sub test_once {
 
     $handler->trigger('once');
     ok !$triggered. 'did not trigger once event after turning if off';
+}
+
+sub test_listen_to {
+    my ($test)  = @_;
+    my $handler  = $test->handler;
+    my $listener = $test->handler;
+
+    my %triggers;
+    $listener->listen_to($handler, 'all', sub { $triggers{listener}++ });
+    $handler->on('all', sub { $triggers{other}++ });
+
+    $handler->trigger('event');
+    is $triggers{listener}, 1, 'triggered event for callback from listen_to';
+    is $triggers{other}, 1, 'triggered event for callback from on';
+
+    %triggers = ();
+    $listener->stop_listening;
+    $handler->trigger('event');
+    is $triggers{listener}, undef, 'did not trigger event for listen_to callback after stop_listening';
+    is $triggers{other}, 1, 'triggered event for callback from on after unrelated listener stopped listening';
+}
+
+sub test_on_all {
+    my ($test) = @_;
+    my $handler = $test->handler;
+
+    my @args_on_all;
+    $handler->on('all', sub { @args_on_all = @_ });
+    
+    my $event = 'random-event-'.rand;
+    my @args  = map rand, 1 .. int(rand 10);
+    $handler->trigger($event, @args);
+    is_deeply \@args_on_all, [$event, @args], 'all callback is triggered with event name and original args';
 }
 
 sub test_leaks {
@@ -135,6 +168,20 @@ sub test_leaks {
         $handler->once('event', $cb);
         $handler->off('event',  $cb);
     } 'no leaks turning off once event';
+
+    no_leaks_ok {
+        my $cb       = sub {};
+        my $listener = $test->handler;
+        $listener->listen_to_once($handler, 'event', $cb);
+        $handler->trigger('event');
+    } 'no leaks triggering listen_to_once event';
+
+    no_leaks_ok {
+        my $cb       = sub {};
+        my $listener = $test->handler;
+        $listener->listen_to_once($handler, 'event', $cb);
+        $listener->stop_listening;
+    } 'no leaks turning off listen_to_once event';
 }
 
 __PACKAGE__->meta->make_immutable;
