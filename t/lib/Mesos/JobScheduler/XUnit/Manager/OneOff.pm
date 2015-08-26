@@ -1,12 +1,10 @@
 package Mesos::JobScheduler::XUnit::Manager::OneOff;
 use Mesos::JobScheduler::Utils qw(now);
+use Mesos::JobScheduler::XUnit::Utils qw(new_job);
 use Test::Class::Moose;
 use namespace::autoclean;
 extends 'Mesos::JobScheduler::XUnit';
-with qw(
-    Mesos::JobScheduler::XUnit::Role::DateFaker
-    Mesos::JobScheduler::XUnit::Role::JobFactory
-);
+with 'Mesos::JobScheduler::XUnit::Role::DateFaker';
 
 sub new_manager {
     my ($test, @traits) = @_;
@@ -18,7 +16,7 @@ sub new_manager {
 
 sub test_adding_one_off_for_now {
     my ($test)  = @_;
-    my $job     = $test->new_job('OneOff', scheduled => now());
+    my $job     = new_job('OneOff', scheduled => now());
     my $manager = $test->new_manager('OneOff');
 
     $manager->add_job($job);
@@ -27,7 +25,7 @@ sub test_adding_one_off_for_now {
 
 sub test_queueing_one_off {
     my ($test)  = @_;
-    my $job     = $test->new_job('OneOff',
+    my $job     = new_job('OneOff',
         scheduled => now()->add(minutes => 5),
     );
     my $manager = $test->new_manager('OneOff');
@@ -52,7 +50,7 @@ sub test_queueing_one_off {
 
 sub test_execution_cleanup {
     my ($test) = @_;
-    my $job     = $test->new_job('OneOff');
+    my $job     = new_job('OneOff');
     my $manager = $test->new_manager('OneOff');
     $manager->add_job($job);
 
@@ -63,7 +61,7 @@ sub test_execution_cleanup {
 
 sub test_update_one_off {
     my ($test)  = @_;
-    my $job     = $test->new_job('OneOff',
+    my $job     = new_job('OneOff',
         scheduled => now()->add(minutes => 1),
     );
     my $manager = $test->new_manager('OneOff');
@@ -81,7 +79,7 @@ sub test_update_one_off {
 
 sub test_remove_one_off {
     my ($test)  = @_;
-    my $job     = $test->new_job('OneOff',
+    my $job     = new_job('OneOff',
         scheduled => now()->add(minutes => 5),
     );
     my $manager = $test->new_manager('OneOff');
@@ -95,7 +93,7 @@ sub test_remove_one_off {
 
 sub test_suspending_one_off_job {
     my ($test)  = @_;
-    my $job     = $test->new_job('OneOff',
+    my $job     = new_job('OneOff',
         scheduled => now()->add(minutes => 5),
     );
     my $manager = $test->new_manager('OneOff');

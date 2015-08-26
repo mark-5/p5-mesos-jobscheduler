@@ -1,12 +1,10 @@
 package Mesos::JobScheduler::XUnit::Manager::Cron;
 use Mesos::JobScheduler::Utils qw(now);
+use Mesos::JobScheduler::XUnit::Utils qw(new_job);
 use Test::Class::Moose;
 use namespace::autoclean;
 extends 'Mesos::JobScheduler::XUnit';
-with qw(
-    Mesos::JobScheduler::XUnit::Role::DateFaker
-    Mesos::JobScheduler::XUnit::Role::JobFactory
-);
+with 'Mesos::JobScheduler::XUnit::Role::DateFaker';
 
 sub new_manager {
     my ($test, @traits) = @_;
@@ -18,7 +16,7 @@ sub new_manager {
 
 sub test_adding_cron_job_for_now {
     my ($test)  = @_;
-    my $cron    = $test->new_job('Cron', crontab => '0-59/5 * * * *');
+    my $cron    = new_job('Cron', crontab => '0-59/5 * * * *');
     my $manager = $test->new_manager('Cron');
     $test->fake_the_date(now()->set_minute(0));
 
@@ -28,7 +26,7 @@ sub test_adding_cron_job_for_now {
 
 sub test_queueing_cron_job {
     my ($test)  = @_;
-    my $cron    = $test->new_job('Cron', crontab => '0-59/5 * * * *');
+    my $cron    = new_job('Cron', crontab => '0-59/5 * * * *');
     my $manager = $test->new_manager('Cron');
     $test->fake_the_date(now()->set_minute(1));
 
@@ -57,7 +55,7 @@ sub test_queueing_cron_job {
 
 sub test_update_cron_job {
     my ($test)  = @_;
-    my $cron    = $test->new_job('Cron', crontab => '0-59/5 * * * *');
+    my $cron    = new_job('Cron', crontab => '0-59/5 * * * *');
     my $manager = $test->new_manager('Cron');
     $test->fake_the_date(now()->set_minute(1));
     $manager->add_job($cron);
@@ -74,7 +72,7 @@ sub test_update_cron_job {
 
 sub test_remove_cron_job {
     my ($test)  = @_;
-    my $cron    = $test->new_job('Cron', crontab => '0-59/5 * * * *');
+    my $cron    = new_job('Cron', crontab => '0-59/5 * * * *');
     my $manager = $test->new_manager('Cron');
     $test->fake_the_date(now()->set_minute(1));
     $manager->add_job($cron);
@@ -87,7 +85,7 @@ sub test_remove_cron_job {
 
 sub test_suspending_cron_job {
     my ($test)  = @_;
-    my $cron    = $test->new_job('Cron', crontab => '0-59/5 * * * *');
+    my $cron    = new_job('Cron', crontab => '0-59/5 * * * *');
     my $manager = $test->new_manager('Cron');
     $test->fake_the_date(now()->set_minute(1));
     $manager->add_job($cron);

@@ -1,10 +1,10 @@
 package Mesos::JobScheduler::XUnit::Framework;
+use Mesos::JobScheduler::XUnit::Utils qw(new_job);
 use Mesos::Messages;
 use Moose::Meta::Class;
 use Test::Class::Moose;
 use namespace::autoclean;
 extends 'Mesos::JobScheduler::XUnit';
-with 'Mesos::JobScheduler::XUnit::Role::JobFactory';
 
 sub new_driver {
     my ($test, %methods) = @_;
@@ -52,7 +52,7 @@ sub test_basic_task_scheduling {
         launchTasks => sub { shift->{launchTasks} = \@_ },
     );
     my $framework = $test->new_framework;
-    my $job       = $test->new_job;
+    my $job       = new_job();
 
     $framework->queue_execution($job);
     my $offer = $test->new_offer;
@@ -71,8 +71,8 @@ sub test_offer_matching_priorities {
     );
     my $framework = $test->new_framework;
 
-    my $high  = $test->new_job(command => 'high priority');
-    my $low   = $test->new_job(command => 'low priority');
+    my $high  = new_job(command => 'high priority');
+    my $low   = new_job(command => 'low priority');
     my $offer = $test->new_offer(resources => $high->resources);
 
     $framework->queue_execution($high);
@@ -91,11 +91,11 @@ sub test_offer_matching_partial_resources {
     );
     my $framework = $test->new_framework;
 
-    my $not_enough = $test->new_job(
+    my $not_enough = new_job(
         command   => 'not enough resources',
         resources => {mem => 10**6},
     );
-    my $enough = $test->new_job(
+    my $enough = new_job(
         command   => 'enough resources',
         resources => {mem => 1},
     );

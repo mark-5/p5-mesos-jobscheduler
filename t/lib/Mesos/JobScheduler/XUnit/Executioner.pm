@@ -1,8 +1,8 @@
 package Mesos::JobScheduler::XUnit::Executioner;
+use Mesos::JobScheduler::XUnit::Utils qw(new_job);
 use Test::Class::Moose;
 use namespace::autoclean;
 extends 'Mesos::JobScheduler::XUnit';
-with 'Mesos::JobScheduler::XUnit::Role::JobFactory';
 
 sub new_executioner {
     my ($test)  = @_;
@@ -12,7 +12,7 @@ sub new_executioner {
 sub test_lifecycle {
     my ($test) = @_;
     my $executioner = $test->new_executioner;
-    my $job         = $test->new_job;
+    my $job         = new_job();
 
     my $to_finish = $executioner->queue($job);
     is $executioner->get($to_finish->id)->status, 'queued';
@@ -34,13 +34,13 @@ sub test_queued {
     my $executioner = $test->new_executioner;
     is scalar $executioner->queued, 0, 'queue initially empty';
 
-    my $first = $test->new_job;
+    my $first = new_job();
     $executioner->queue($first);
     my @queued = $executioner->queued;
     is scalar @queued, 1, 'queue has 1 item after queuing first job';
     is $queued[0]->job_id, $first->id;
 
-    my $second = $test->new_job;
+    my $second = new_job();
     $executioner->queue($second);
     @queued = $executioner->queued;
     is scalar @queued, 2, 'queue has 2 items after queuing second job';

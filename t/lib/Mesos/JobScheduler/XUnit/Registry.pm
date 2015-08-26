@@ -2,10 +2,10 @@ package Mesos::JobScheduler::XUnit::Registry;
 use Mesos::JobScheduler::Logger;
 use Mesos::JobScheduler::Registry;
 use Mesos::JobScheduler::Storage;
+use Mesos::JobScheduler::XUnit::Utils qw(new_job);
 use Test::Class::Moose;
 use namespace::autoclean;
 extends 'Mesos::JobScheduler::XUnit';
-with 'Mesos::JobScheduler::XUnit::Role::JobFactory';
 
 sub new_registry {
     my ($test) = @_;
@@ -16,7 +16,7 @@ sub test_adding_job {
     my ($test)   = @_;
     my $registry = $test->new_registry;
 
-    my $job = $test->new_job;
+    my $job = new_job();
     $registry->add($job);
     
     my $registered = $registry->get($job->id);
@@ -27,7 +27,7 @@ sub test_removing_job {
     my ($test)   = @_;
     my $registry = $test->new_registry;
 
-    my $job = $test->new_job;
+    my $job = new_job();
     $registry->add($job);
 
     $registry->remove($job->id);
@@ -38,7 +38,7 @@ sub test_updating_job {
     my ($test)   = @_;
     my $registry = $test->new_registry;
 
-    my $job = $test->new_job;
+    my $job = new_job();
     $registry->add($job);
 
     my $old_name = $job->name;

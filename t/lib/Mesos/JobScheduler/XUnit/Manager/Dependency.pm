@@ -1,8 +1,8 @@
 package Mesos::JobScheduler::XUnit::Manager::Dependency;
+use Mesos::JobScheduler::XUnit::Utils qw(new_job);
 use Test::Class::Moose;
 use namespace::autoclean;
 extends 'Mesos::JobScheduler::XUnit';
-with 'Mesos::JobScheduler::XUnit::Role::JobFactory';
 
 sub new_manager {
     my ($test, @traits) = @_;
@@ -15,8 +15,8 @@ sub new_manager {
 sub test_dependency_queueing {
     my ($test) = @_;
     my $manager = $test->new_manager('Dependency');
-    my $parent  = $test->new_job;
-    my $child   = $test->new_job('Dependency',
+    my $parent  = new_job();
+    my $child   = new_job('Dependency',
         parent => $parent->id,
     );
     $manager->add_job($parent);
@@ -33,8 +33,8 @@ sub test_dependency_queueing {
 sub test_parent_job_failure {
     my ($test) = @_;
     my $manager = $test->new_manager('Dependency');
-    my $parent  = $test->new_job;
-    my $child   = $test->new_job('Dependency',
+    my $parent  = new_job();
+    my $child   = new_job('Dependency',
         parent => $parent->id,
     );
     $manager->add_job($parent);
@@ -48,9 +48,9 @@ sub test_parent_job_failure {
 sub test_updating_dependency {
     my ($test) = @_;
     my $manager = $test->new_manager('Dependency');
-    my $parent1 = $test->new_job;
-    my $parent2 = $test->new_job;
-    my $child   = $test->new_job('Dependency',
+    my $parent1 = new_job();
+    my $parent2 = new_job();
+    my $child   = new_job('Dependency',
         parent => $parent1->id,
     );
     $manager->add_job($parent1);
@@ -72,8 +72,8 @@ sub test_updating_dependency {
 sub test_multiple_parent_executions {
     my ($test) = @_;
     my $manager = $test->new_manager('Dependency');
-    my $parent  = $test->new_job;
-    my $child   = $test->new_job('Dependency',
+    my $parent  = new_job();
+    my $child   = new_job('Dependency',
         parent => $parent->id,
     );
     $manager->add_job($parent);
@@ -93,8 +93,8 @@ sub test_multiple_parent_executions {
 sub test_removing_dependency {
     my ($test) = @_;
     my $manager = $test->new_manager('Dependency');
-    my $parent  = $test->new_job;
-    my $child   = $test->new_job('Dependency',
+    my $parent  = new_job();
+    my $child   = new_job('Dependency',
         parent => $parent->id,
     );
     $manager->add_job($parent);
@@ -110,8 +110,8 @@ sub test_removing_dependency {
 sub test_suspending_dependency {
     my ($test) = @_;
     my $manager = $test->new_manager('Dependency');
-    my $parent  = $test->new_job;
-    my $child   = $test->new_job('Dependency',
+    my $parent  = new_job();
+    my $child   = new_job('Dependency',
         parent => $parent->id,
     );
     $manager->add_job($parent);

@@ -1,11 +1,11 @@
 package Mesos::JobScheduler::XUnit::Job;
+use Mesos::JobScheduler::XUnit::Utils qw(new_job);
 use Test::Class::Moose;
 use namespace::autoclean;
-with 'Mesos::JobScheduler::XUnit::Role::JobFactory';
 
 sub test_job_updates {
     my ($test) = @_;
-    my $job = $test->new_job;
+    my $job = new_job();
 
     my $new_job = $job->update(name => 'a new name');
     isnt $new_job->name, $job->name, 'name update does not change old job';

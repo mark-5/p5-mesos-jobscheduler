@@ -1,10 +1,13 @@
-package Mesos::JobScheduler::XUnit::Role::JobFactory;
+package Mesos::JobScheduler::XUnit::Utils;
+use strict;
+use warnings;
 use Mesos::JobScheduler::Types qw(to_Job);
-use Test::Class::Moose::Role;
-use namespace::autoclean;
+use base 'Exporter::Tiny';
+
+our @EXPORT_OK = qw(new_job);
 
 sub new_job {
-    my ($test, @args) = @_;
+    my (@args) = @_;
     my %defaults = (
         command => 'test-command-' . rand,
         name    => 'test-name-'    . rand,
