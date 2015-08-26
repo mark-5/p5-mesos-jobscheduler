@@ -9,6 +9,20 @@ with qw(
     Mesos::JobScheduler::Role::Immutable
 );
 
+# ABSTRACT: an instance of a job to be executed
+
+=head1 ATTRIBUTES
+
+=head2 created
+
+=head2 job
+
+=head2 status
+
+=head2 updated
+
+=cut
+
 has created => (
     is      => 'ro',
     isa     => DateTime,

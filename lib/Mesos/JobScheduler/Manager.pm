@@ -10,6 +10,36 @@ with qw(
     MooseX::Traits::Pluggable
 );
 
+# ABSTRACT: manage executions for different job types
+
+=head1 METHODS
+
+=head2 all_jobs
+
+=head2 add_job
+
+=head2 get_job
+
+=head2 remove_job
+
+=head2 update_job
+
+=head2 all_executions
+
+=head2 fail_execution
+
+=head2 finish_execution
+
+=head2 get_execution
+
+=head2 queue_execution
+
+=head2 queued
+
+=head2 start_execution
+
+=cut
+
 has '+_trait_namespace' => (
     default => '+Traits',
 );

@@ -6,6 +6,26 @@ use Moose;
 use namespace::autoclean;
 with 'Mesos::JobScheduler::Role::Events';
 
+# ABSTRACT: manage job executions
+
+=head1 METHODS
+
+=head2 all
+
+=head2 get
+
+=head2 fail
+
+=head2 finish
+
+=head2 queue
+
+=head2 queued
+
+=head2 start
+
+=cut
+
 has logger => (
     is       => 'ro',
     required => 1,

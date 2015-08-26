@@ -8,7 +8,7 @@ use Moose;
 use namespace::autoclean;
 extends 'Bread::Board::Container';
 
-# ABSTRACT: a base class for Mesos job scheduling frameworks
+# ABSTRACT: services for building Mesos job scheduling frameworks
 
 has '+name' => (
     default => 'app',

@@ -7,6 +7,8 @@ use Moose;
 use namespace::autoclean;
 extends 'Mesos::Scheduler';
 
+# ABSTRACT: a base class for Mesos job scheduling frameworks
+
 has manager => (
     is       => 'ro',
     required => 1,

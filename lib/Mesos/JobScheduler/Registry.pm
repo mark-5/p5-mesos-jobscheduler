@@ -5,6 +5,22 @@ use Moose;
 use namespace::autoclean;
 with 'Mesos::JobScheduler::Role::Events';
 
+# ABSTRACT: add, update, and remove jobs
+
+=head1 METHODS
+
+=head2 add
+
+=head2 all
+
+=head2 get
+
+=head2 remove
+
+=head2 update
+
+=cut
+
 has logger => (
     is       => 'ro',
     required => 1,

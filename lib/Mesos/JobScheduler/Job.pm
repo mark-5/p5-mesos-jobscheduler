@@ -10,6 +10,24 @@ with qw(
     Mesos::JobScheduler::Role::Immutable
 );
 
+# ABSTRACT: a base class for Mesos::JobScheduler jobs
+
+=head1 ATTRIBUTES
+
+=head2 command
+
+=head2 name
+
+=head2 resources
+
+=head2 suspended
+
+=head1 METHODS
+
+=head2 update
+
+=cut
+
 has command => (
     is       => 'ro',
     required => 1,
