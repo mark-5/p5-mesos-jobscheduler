@@ -8,6 +8,7 @@ requires 'DateTime::Format::RFC3339';
 requires 'Exporter::Tiny';
 requires 'Hash::Merge';
 requires 'JSON';
+requires 'List::MoreUtils';
 requires 'Mesos';
 requires 'Module::Pluggable';
 requires 'Module::Runtime';

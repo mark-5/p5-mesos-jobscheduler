@@ -45,7 +45,6 @@ has suspended => (
 
 has type => (
     is      => 'ro',
-    lazy    => 1,
     builder => '_build_type',
 );
 sub _build_type {

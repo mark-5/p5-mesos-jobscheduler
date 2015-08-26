@@ -84,7 +84,7 @@ sub all {
     my ($self) = @_;
     my @executions = 
         sort { $a->created <=> $b->created }
-        map  { $self->get($_)              }
+        map  { to_Execution $_             }
         $self->storage->get_children('executions');
     return @executions;
 }

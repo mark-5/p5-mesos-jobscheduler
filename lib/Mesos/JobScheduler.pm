@@ -59,13 +59,13 @@ sub BUILD {
         service manager => (
             class        => 'Mesos::JobScheduler::Manager',
             lifecycle    => 'Singleton',
-            dependencies => [qw(event_loop executioner logger registry)],
+            dependencies => [qw(event_loop executioner registry)],
         );
 
         service framework => (
             class        => 'Mesos::JobScheduler::Framework',
             lifecycle    => 'Singleton',
-            dependencies => [qw(config logger manager)],
+            dependencies => [qw(manager)],
         );
 
         service api => (

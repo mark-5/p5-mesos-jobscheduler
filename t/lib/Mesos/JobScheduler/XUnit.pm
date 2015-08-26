@@ -38,13 +38,28 @@ sub BUILD {
 
         service manager => (
             class        => 'Mesos::JobScheduler::Manager',
-            dependencies => [qw(event_loop executioner logger registry)],
+            dependencies => [qw(event_loop executioner registry)],
             parameters   => [qw(traits)],
             block        => sub {
                 my $s      = shift;
                 my %params = map {($_ => $s->param($_))} $s->param;
                 return Mesos::JobScheduler::Manager->new_with_traits(%params);
             },
+        );
+
+        service framework => (
+            class      => 'Mesos::JobScheduler::Framework',
+            parameters => [qw(traits)],
+            block      => sub {
+                my $s       = shift;
+                my $traits  = $s->param('traits');
+                my $manager = $s->fetch('manager')
+                                ->get(traits => $traits);
+                return Mesos::JobScheduler::Framework->new(
+                    manager => $manager,
+                );
+            },
+
         );
 
     };

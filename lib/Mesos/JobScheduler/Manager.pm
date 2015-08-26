@@ -32,11 +32,6 @@ has executioner => (
     },
 );
 
-has logger => (
-    is       => 'ro',
-    required => 1,
-);
-
 has registry => (
     is      => 'ro',
     handles => {

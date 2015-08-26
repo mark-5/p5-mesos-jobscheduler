@@ -8,7 +8,6 @@ use namespace::autoclean;
 has id => (
     is      => 'ro',
     isa     => Uuid,
-    lazy    => 1,
     default => Uuid->generator(UUID_RANDOM),
 );
 

@@ -19,7 +19,7 @@ sub all {
     my ($self) = @_;
     my @jobs =
         sort { $a->created <=> $b->created }
-        map  { $self->get($_)              }
+        map  { to_Job $_                   }
         $self->storage->get_children('registry');
     return @jobs;
 }
