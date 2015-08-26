@@ -1,6 +1,7 @@
 package Mesos::JobScheduler;
 
 use Bread::Board;
+use Mesos::JobScheduler::Utils qw(find_traits);
 use Mesos::JobScheduler::Types qw(Config);
 use Scalar::Util qw(weaken);
 use Moose;
@@ -60,6 +61,15 @@ sub BUILD {
             class        => 'Mesos::JobScheduler::Manager',
             lifecycle    => 'Singleton',
             dependencies => [qw(event_loop executioner registry)],
+            block        => sub {
+                my $s      = shift;
+                my %params = map {($_ => $s->param($_))} $s->param;
+                my @traits = find_traits('Mesos::JobScheduler::Manager');
+                return Mesos::JobScheduler::Manager->new_with_traits(
+                    traits => \@traits,
+                    %params,
+                );
+            },
         );
 
         service framework => (
@@ -71,7 +81,7 @@ sub BUILD {
         service api => (
             class        => 'Mesos::JobScheduler::API',
             lifecycle    => 'Singleton',
-            dependencies => [qw(config logger framework)],
+            dependencies => [qw(config logger framework manager)],
         );
 
     };
