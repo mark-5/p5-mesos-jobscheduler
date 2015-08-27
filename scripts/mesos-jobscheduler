@@ -1,0 +1,4 @@
+#!/usr/bin/env perl
+use FindBin::libs;
+use Mesos::JobScheduler::Command;
+Mesos::JobScheduler::Command->run;

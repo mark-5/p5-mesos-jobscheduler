@@ -16,6 +16,7 @@ requires 'Mesos';
 requires 'Module::Pluggable';
 requires 'Module::Runtime';
 requires 'Moose';
+requires 'MooseX::App::Cmd';
 requires 'MooseX::Traits::Pluggable';
 requires 'Proc::Daemon';
 requires 'Router::Simple';

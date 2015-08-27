@@ -29,6 +29,11 @@ has logger => (
     default => sub { {} },
 );
 
+has mesos => (
+    is      => 'ro',
+    default => sub { {} },
+);
+
 has storage => (
     is      => 'ro',
     default => sub { {} },

@@ -153,7 +153,7 @@ sub _psgi_remove_job {
     return $old;
 }
 
-after start_listeners => sub {
+after start => sub {
     weaken(my $self = shift);
     my $config = $self->config->{http} // {};
 
@@ -172,7 +172,7 @@ after start_listeners => sub {
     $self->_set_psgi_server($server);
 };
 
-before stop_listeners => sub {
+after stop => sub {
     my ($self) = @_;
     $self->logger->info('stopping http listener');
     $self->_clear_psgi_server;

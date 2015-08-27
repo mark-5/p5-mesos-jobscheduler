@@ -31,18 +31,20 @@ has manager => (
     required => 1,
 );
 
-sub start_listeners {}
-
-sub stop_listeners {}
+has mesos => (
+    is       => 'ro',
+    required => 1,
+    handles  => [qw(run start stop wait)],
+);
 
 sub BUILD {
     my ($self) = @_;
-    $self->start_listeners;
+    $self->start;
 }
 
 sub DEMOLISH {
     my ($self) = @_;
-    $self->stop_listeners;
+    $self->stop;
 }
 
 __PACKAGE__->meta->make_immutable;

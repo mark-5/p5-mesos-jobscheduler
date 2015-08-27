@@ -79,7 +79,7 @@ sub BUILD {
         service api => (
             class        => 'Mesos::JobScheduler::API',
             lifecycle    => 'Singleton',
-            dependencies => [qw(config framework logger manager)],
+            dependencies => [qw(config framework logger manager mesos)],
             block        => sub {
                 my $s      = shift;
                 my %params = map {($_ => $s->param($_))} $s->param;
@@ -87,6 +87,27 @@ sub BUILD {
                 return Mesos::JobScheduler::API->new_with_traits(
                     traits => \@traits,
                     %params,
+                );
+            },
+        );
+
+        service mesos => (
+            class        => 'Mesos::SchedulerDriver',
+            lifecycle    => 'Singleton',
+            dependencies => [qw(config event_loop framework)],
+            block        => sub {
+                my $s         = shift;
+                my $conf      = $s->param('config')->mesos;
+                my $framework = $s->param('framework');
+                my $loop      = $s->param('event_loop');
+                return Mesos::SchedulerDriver->new(
+                    dispatcher => $loop->type,
+                    framework  => {
+                        user => $conf->{user} // '',
+                        name => 'Mesos::JobScheduler Framework',
+                    },
+                    master    => $conf->{master},
+                    scheduler => $framework,
                 );
             },
         );
