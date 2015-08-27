@@ -1,18 +1,75 @@
 package Mesos::JobScheduler;
 
-use Moo;
+use Bread::Board;
+use Mesos::JobScheduler::Types qw(Config);
+use Scalar::Util qw(weaken);
+use Moose;
 use namespace::autoclean;
-extends 'Mesos::Scheduler';
-with qw(
-    Mesos::JobScheduler::Role::Core
-    Mesos::JobScheduler::Role::HasLogger::STDERR
-    Mesos::JobScheduler::Role::HasStorage::ZooKeeper
-    Mesos::JobScheduler::Role::Listener::HTTP
-    Mesos::JobScheduler::Role::Manager::Cron
-    Mesos::JobScheduler::Role::Manager::Dependency
-    Mesos::JobScheduler::Role::Manager::OneOff
-);
+extends 'Bread::Board::Container';
 
 # ABSTRACT: a base class for Mesos job scheduling frameworks
 
+has '+name' => (
+    default => 'mesos-jobscheduler',
+);
+
+has config => (
+    is      => 'ro',
+    isa     => Config,
+    coerce  => 1,
+    default => sub { {} },
+);
+
+sub BUILD {
+    weaken(my $self = shift);
+    container $self => as {
+
+        service config => literal($self->config);
+
+        service logger => (
+            class        => 'Mesos::JobScheduler::Logger',
+            lifecycle    => 'Singleton',
+            dependencies => [qw(config)],
+        );
+
+        service storage => (
+            class        => 'Mesos::JobScheduler::Storage',
+            lifecycle    => 'Singleton',
+            dependencies => [qw(config)],
+        );
+
+        service registry => (
+            class        => 'Mesos::JobScheduler::Registrar',
+            lifecycle    => 'Singleton',
+            dependencies => [qw(logger storage)],
+        );
+
+        service executioner => (
+            class        => 'Mesos::JobScheduler::Executioner',
+            lifecycle    => 'Singleton',
+            dependencies => [qw(logger storage)],
+        );
+
+        service manager => (
+            class        => 'Mesos::JobScheduler::Manager',
+            lifecycle    => 'Singleton',
+            dependencies => [qw(config logger registry executioner)],
+        );
+
+        service framework => (
+            class        => 'Mesos::JobScheduler::Framework',
+            lifecycle    => 'Singleton',
+            dependencies => [qw(config logger manager)],
+        );
+
+        service api => (
+            class        => 'Mesos::JobScheduler::API',
+            lifecycle    => 'Singleton',
+            dependencies => [qw(config logger framework)],
+        );
+
+    };
+}
+
+__PACKAGE__->meta->make_immutable;
 1;

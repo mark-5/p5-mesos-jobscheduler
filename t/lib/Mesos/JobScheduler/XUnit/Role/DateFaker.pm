@@ -12,13 +12,11 @@ has _date_override => (
 sub test_setup { shift->unfake_the_date }
 
 sub fake_the_date {
-    my ($test, %args) = @_;
-    if (my $now = $args{now}) {
-        $test->_date_override->replace(
-            'Mesos::JobScheduler::DateTime::_core_time',
-            sub { $now->hires_epoch },
-        );
-    }
+    my ($test, $now) = @_;
+    $test->_date_override->replace(
+        'Mesos::JobScheduler::DateTime::_core_time',
+        sub { $now->hires_epoch },
+    );
 }
 
 sub unfake_the_date {

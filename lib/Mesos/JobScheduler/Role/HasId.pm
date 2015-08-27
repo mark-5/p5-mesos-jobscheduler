@@ -2,7 +2,7 @@ package Mesos::JobScheduler::Role::HasId;
 
 use Types::UUID qw(Uuid);
 use UUID::Tiny qw(:std);
-use Moo::Role;
+use Moose::Role;
 use namespace::autoclean;
 
 has id => (
