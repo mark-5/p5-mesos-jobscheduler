@@ -6,6 +6,8 @@ requires 'DateTime';
 requires 'DateTime::Event::Cron';
 requires 'DateTime::Format::RFC3339';
 requires 'Exporter::Tiny';
+requires 'FindBin::libs';
+requires 'Getopt::Long::Descriptive';
 requires 'Hash::Merge';
 requires 'HTTP::Throwable';
 requires 'JSON';
@@ -15,6 +17,7 @@ requires 'Module::Pluggable';
 requires 'Module::Runtime';
 requires 'Moose';
 requires 'MooseX::Traits::Pluggable';
+requires 'Proc::Daemon';
 requires 'Router::Simple';
 requires 'Safe::Isa';
 requires 'Scalar::Util';
@@ -24,6 +27,7 @@ requires 'Type::Tiny';
 requires 'Types::UUID';
 requires 'UUID::Tiny';
 requires 'YAML';
+requires 'ZooKeeper';
 
 on develop => sub {
     requires 'Dist::Zilla::Plugin::ExtraTests';

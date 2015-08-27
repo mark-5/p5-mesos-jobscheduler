@@ -13,7 +13,12 @@ has config => (
 
 has root => (
     is      => 'ro',
-    default => '/',
+    lazy    => 1,
+    default => sub {
+        my ($self)  = @_;
+        my $default = '/mesos-jobscheduler';
+        return $self->config->{root} // $default;
+    },
 );
 
 has _elements => (

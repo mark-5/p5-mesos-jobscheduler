@@ -19,17 +19,22 @@ sub _build_config_from_file {
     return LoadFile($self->file);
 }
 
+has api => (
+    is      => 'ro',
+    default => sub { {} },
+);
+
 has logger => (
     is      => 'ro',
     default => sub { {} },
 );
 
-has manager => (
+has storage => (
     is      => 'ro',
     default => sub { {} },
 );
 
-has storage => (
+has zookeeper => (
     is      => 'ro',
     default => sub { {} },
 );

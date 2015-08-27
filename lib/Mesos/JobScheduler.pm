@@ -25,24 +25,22 @@ sub BUILD {
     weaken(my $self = shift);
     container $self => as {
 
-        service config => literal($self->config);
+        service config => $self->config;
 
         service event_loop => (
-            class        => 'Mesos::JobScheduler::EventLoop',
-            lifecycle    => 'Singleton',
-            dependencies => [qw(config)],
+            class     => 'Mesos::JobScheduler::EventLoop',
+            lifecycle => 'Singleton',
         );
 
         service logger => (
-            class        => 'Mesos::JobScheduler::Logger',
-            lifecycle    => 'Singleton',
-            dependencies => [qw(config)],
+            class     => 'Mesos::JobScheduler::Logger::STDERR',
+            lifecycle => 'Singleton',
         );
 
         service storage => (
-            class        => 'Mesos::JobScheduler::Storage',
+            class        => 'Mesos::JobScheduler::Storage::ZooKeeper',
             lifecycle    => 'Singleton',
-            dependencies => [qw(config)],
+            dependencies => {zk => 'zookeeper'},
         );
 
         service registry => (
@@ -81,7 +79,31 @@ sub BUILD {
         service api => (
             class        => 'Mesos::JobScheduler::API',
             lifecycle    => 'Singleton',
-            dependencies => [qw(config logger framework manager)],
+            dependencies => [qw(config framework logger manager)],
+            block        => sub {
+                my $s      = shift;
+                my %params = map {($_ => $s->param($_))} $s->param;
+                my @traits = find_traits('Mesos::JobScheduler::API');
+                return Mesos::JobScheduler::API->new_with_traits(
+                    traits => \@traits,
+                    %params,
+                );
+            },
+        );
+
+        service zookeeper => (
+            class        => 'ZooKeeper',
+            lifecycle    => 'Singleton',
+            dependencies => [qw(config event_loop)],
+            block        => sub {
+                my $s    = shift;
+                my $conf = $s->param('config')->zookeeper;
+                my $loop = $s->param('event_loop');
+                return ZooKeeper->new(
+                    dispatcher => $loop->type,
+                    hosts      => $conf->{hosts},
+                );
+            },
         );
 
     };

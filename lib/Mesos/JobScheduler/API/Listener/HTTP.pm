@@ -3,6 +3,7 @@ package Mesos::JobScheduler::API::Listener::HTTP;
 use HTTP::Throwable::Factory qw(http_throw);
 use Mesos::JobScheduler::Types qw(to_Job);
 use Mesos::JobScheduler::Utils qw(decode_json encode_json);
+use Plack::Builder;
 use Plack::Request;
 use Router::Simple;
 use Safe::Isa qw($_DOES);
@@ -153,7 +154,7 @@ sub _psgi_remove_job {
 }
 
 after start_listeners => sub {
-    my ($self) = @_;
+    weaken(my $self = shift);
     my $config = $self->config->{http} // {};
 
     my $host   = $config->{host} // '0.0.0.0';
@@ -161,7 +162,13 @@ after start_listeners => sub {
     $self->logger->info("starting http listener on http://$host:$port");
 
     my $server = Twiggy::Server->new(%$config);
-    $server->register_service($self->_psgi_app);
+    my $app    = builder {
+        enable 'Plack::Middleware::AccessLog',
+            format => 'combined',
+            logger => sub { $self->logger->info(@_) };
+        $self->_psgi_app;
+    };
+    $server->register_service($app);
     $self->_set_psgi_server($server);
 };
 

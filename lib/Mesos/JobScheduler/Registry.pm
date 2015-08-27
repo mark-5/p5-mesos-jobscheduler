@@ -49,7 +49,7 @@ sub add {
 
 sub remove {
     my ($self, $id) = @_;
-    my $job = $self->storage->remove("registry/$id");
+    my $job = to_Job $self->storage->remove("registry/$id");
     $self->logger->info("removed job $id");
     $self->trigger('remove:'.$job->type, $job);
     return $job;
@@ -68,6 +68,11 @@ sub update {
     $self->logger->info("updated job $id");
     $self->trigger('update:'.$new->type, $new, $old);
     return $new;
+}
+
+sub BUILD {
+    my ($self) = @_;
+    $self->trigger('add:'.$_->type, $_) for $self->all;
 }
 
 __PACKAGE__->meta->make_immutable;

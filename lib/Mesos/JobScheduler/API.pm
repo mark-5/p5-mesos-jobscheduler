@@ -12,15 +12,16 @@ has '+_trait_namespace' => (
 has config => (
     is      => 'ro',
     isa     => Config['api'],
+    coerce  => 1,
     default => sub { {} },
 );
 
-has event_loop => (
+has framework => (
     is       => 'ro',
     required => 1,
 );
 
-has framework => (
+has logger => (
     is       => 'ro',
     required => 1,
 );
