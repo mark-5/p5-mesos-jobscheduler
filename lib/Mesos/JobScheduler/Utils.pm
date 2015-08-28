@@ -15,6 +15,18 @@ our @EXPORT_OK = qw(
     now
 );
 
+=head1 FUNCTIONS
+
+=head2 decode_json
+
+=head2 encode_json
+
+=head2 find_traits
+
+=head2 now
+
+=cut
+
 sub decode_json {
     my ($txt, $opts) = @_;
     return JSON::from_json($txt, {

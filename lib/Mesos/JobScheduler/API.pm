@@ -9,6 +9,8 @@ has '+_trait_namespace' => (
     default => '+Listener',
 );
 
+# ABSTRACT: an API server for interacting with the Mesos::JobScheduler::Framework
+
 has config => (
     is      => 'ro',
     isa     => Config['api'],

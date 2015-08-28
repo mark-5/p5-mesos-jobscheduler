@@ -6,6 +6,57 @@ Mesos::JobScheduler - services for building Mesos job scheduling frameworks
 
 version 0.0.1
 
+# SYNOPSIS
+
+    my $app = Mesos::JobScheduler->new(
+        config => {
+            mesos     => { master => 'zk://localhost:2181/mesos' },
+            zookeeper => { hosts  => 'localhost:2181'            },
+        },
+    );
+    my $api = $app->resolve('service' => 'api');
+    $api->run;
+
+# DESCRIPTION
+
+Mesos::JobScheduler is a Bread::Board container, wired with a variety of services intended for Mesos job scheduling frameworks.
+
+# SERVICES
+
+## api
+
+## config
+
+## event\_loop
+
+## framework
+
+## logger
+
+## manager
+
+## mesos
+
+## storage
+
+## zookeeper
+
+# EXTENDING
+
+    package MyScheduler;
+    use Bread::Board;
+    use Moose;
+    extends 'Mesos::JobScheduler';
+
+    sub BUILD {
+        my ($self) = @_;
+        container $self => as {
+            service '+framework' => (
+                class => 'MyScheduler::Framework',
+            );
+        };
+    }
+
 # AUTHOR
 
 Mark Flickinger

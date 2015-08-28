@@ -6,6 +6,8 @@ use Moose;
 use namespace::autoclean;
 extends 'MooseX::App::Cmd::Command';
 
+# ABSTRACT: start an API server
+
 has daemonize => (
     traits        => [qw(Getopt)],
     isa           => 'Bool',
@@ -29,9 +31,14 @@ has master => (
     isa           => 'Str',
     is            => 'ro',
     cmd_aliases   => 'm',
-    required      => 1,
+    lazy          => 1,
+    builder       => '_build_master',
     documentation => 'the mesos master to use',
 );
+sub _build_master {
+    my ($self) = @_;
+    return sprintf('zk://%s/mesos', $self->zk);
+}
 
 has pidfile => (
     traits => [qw(Getopt)],

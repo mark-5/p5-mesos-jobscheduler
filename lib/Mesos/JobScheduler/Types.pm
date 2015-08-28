@@ -12,6 +12,18 @@ use Type::Library
 use Type::Utils -all;
 use Types::Standard qw(HashRef InstanceOf Str);
 
+=head1 TYPES
+
+=head2 Config
+
+=head2 DateTime
+
+=head2 Execution
+
+=head2 Job
+
+=cut
+
 my $config_class = 'Mesos::JobScheduler::Config';
 declare Config,
     as InstanceOf[$config_class],
@@ -57,12 +69,8 @@ declare ConfigField,
 class_type DateTime, {class => 'Mesos::JobScheduler::DateTime'};
 
 coerce DateTime,
-    from Str, <<'__END__';
-do {
-    my $obj = DateTime::Format::RFC3339->new->parse_datetime($_);
-    Mesos::JobScheduler::DateTime->from_object(object => $obj);
-}
-__END__
+    from Str,
+    'Mesos::JobScheduler::DateTime->parse_datetime($_)';
 
 declare Execution, as InstanceOf['Mesos::JobScheduler::Execution'];
 
