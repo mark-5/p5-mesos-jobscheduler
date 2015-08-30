@@ -6,7 +6,7 @@ use Scalar::Util qw(weaken);
 use Moose;
 use namespace::autoclean;
 with qw(
-    Mesos::JobScheduler::Role::Events
+    Backbone::Events
     MooseX::Traits::Pluggable
 );
 

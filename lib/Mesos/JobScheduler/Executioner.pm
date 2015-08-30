@@ -4,7 +4,7 @@ use Mesos::JobScheduler::Types qw(to_Execution);
 use Mesos::JobScheduler::Utils qw(now);
 use Moose;
 use namespace::autoclean;
-with 'Mesos::JobScheduler::Role::Events';
+with 'Backbone::Events';
 
 # ABSTRACT: manage job executions
 

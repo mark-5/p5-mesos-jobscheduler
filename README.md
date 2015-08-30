@@ -10,8 +10,7 @@ version 0.0.1
 
     my $app = Mesos::JobScheduler->new(
         config => {
-            mesos     => { master => 'zk://localhost:2181/mesos' },
-            zookeeper => { hosts  => 'localhost:2181'            },
+            zookeeper => { hosts  => 'localhost:2181' },
         },
     );
     my $api = $app->resolve('service' => 'api');

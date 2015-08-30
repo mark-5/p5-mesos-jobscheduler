@@ -1,5 +1,6 @@
 requires 'namespace::autoclean', '0.16';
 requires 'AnyEvent::Future';
+requires 'Backbone::Events';
 requires 'Bread::Board';
 requires 'Class::Method::Modifiers';
 requires 'DateTime';
@@ -32,6 +33,7 @@ requires 'ZooKeeper';
 
 on develop => sub {
     requires 'Dist::Zilla::Plugin::ExtraTests';
+    requires 'Dist::Zilla::Plugin::GitHub::Meta';
     requires 'Dist::Zilla::Plugin::Prereqs::FromCPANfile';
     requires 'Dist::Zilla::Plugin::ReadmeFromPod';
     requires 'Dist::Zilla::PluginBundle::Basic';

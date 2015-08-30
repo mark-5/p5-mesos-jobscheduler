@@ -3,7 +3,7 @@ package Mesos::JobScheduler::Registry;
 use Mesos::JobScheduler::Types qw(to_Job);
 use Moose;
 use namespace::autoclean;
-with 'Mesos::JobScheduler::Role::Events';
+with 'Backbone::Events';
 
 # ABSTRACT: add, update, and remove jobs
 
