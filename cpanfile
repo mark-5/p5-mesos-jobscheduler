@@ -1,6 +1,6 @@
 requires 'namespace::autoclean', '0.16';
 requires 'AnyEvent::Future';
-requires 'Backbone::Events';
+requires 'Backbone::Events', '0.0.3';
 requires 'Bread::Board';
 requires 'Class::Method::Modifiers';
 requires 'DateTime';

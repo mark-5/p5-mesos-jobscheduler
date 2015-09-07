@@ -50,9 +50,9 @@ after attach_listeners => sub {
         $self->_remove_job_dependency($job);
     });
 
-    $self->on('finish', sub {
-        my ($execution) = @_;
-        my $parent      = $execution->job;
+    $self->on('finish:all', sub {
+        my ($event, $execution) = @_;
+        my $parent = $execution->job;
         $self->queue_execution($_->{job})
             for values %{$self->_parent_jobs->{$parent->id}||{}};
     });
